@@ -15,7 +15,7 @@ public class AVLTree<T extends Comparable <T>> {
     
     /***************************************************************************
     * Takes a piece of data of type T(declared at tree declaration) and calls
-    * addRecursive to add a new node with that data to the tree.
+    * addRecursive to add a new node with that data to the tree. Test!
     ***************************************************************************/
     public void addNode(T data)
     {
