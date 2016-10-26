@@ -29,7 +29,7 @@ public class GamePanel extends JPanel{
     }
     
     private void clearDisplay(Graphics g){
-        g.setColor(Color.WHITE);
+        g.setColor(Color.MAGENTA);
         g.fillRect(0,0,getWidth(),getHeight());
     }
     

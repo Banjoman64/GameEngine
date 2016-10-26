@@ -39,6 +39,7 @@ public class Ball extends GameObject implements GameObjectInterface{
     
     
     public Ball(){
+        //super();
         x = 0;
         y = 0;
         
@@ -47,6 +48,7 @@ public class Ball extends GameObject implements GameObjectInterface{
     }
     
     public Ball(Integer x, Integer y){
+        //super();
         this.x = x;
         this.y = y;
         width = 32;
@@ -147,5 +149,7 @@ public class Ball extends GameObject implements GameObjectInterface{
     @Override
     public void draw(Graphics g) {
         g.drawImage(sprite.getSprite(), (int)(x)-offset.x, (int)(y)-offset.y, null);
+        g.setColor(Color.WHITE);
+        g.drawString(Integer.toString(this.id), (int)(x)-offset.x, (int)(y)-offset.y);
     }
 }

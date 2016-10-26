@@ -21,15 +21,15 @@ public class Main
         
         
                 
-        tree.addNode(50);
-        tree.addNode(25);
-        tree.addNode(75);
-        tree.addNode(15);
-        tree.addNode(35);
-        tree.addNode(65);
-        tree.addNode(85);
-        tree.addNode(14);
-        tree.addNode(16);
+        tree.add(50);
+        tree.add(25);
+        tree.add(75);
+        tree.add(15);
+        tree.add(35);
+        tree.add(65);
+        tree.add(85);
+        tree.add(14);
+        tree.add(16);
         
         tree.printTree();
         
@@ -40,16 +40,16 @@ public class Main
         
         tree.printTree();
 
-        /*
         
-        if(true)
+        
+        if(false)
         {
             new GameEngine();
         }else
         {
             new LevelBuilder();
         }
-        */
+        
     }
     
     

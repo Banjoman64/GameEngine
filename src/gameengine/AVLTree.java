@@ -17,7 +17,7 @@ public class AVLTree<T extends Comparable <T>> {
     * Takes a piece of data of type T(declared at tree declaration) and calls
     * addRecursive to add a new node with that data to the tree. Test!
     ***************************************************************************/
-    public void addNode(T data)
+    public void add(T data)
     {
         //If there is no root, make the new node the root and return
         if (root == null)
@@ -27,14 +27,14 @@ public class AVLTree<T extends Comparable <T>> {
         }
         
         //recursively add the node
-        addNode(data, this.root);
+        add(data, this.root);
     }
     
     /***************************************************************************
-    * Called by addNode. Recursively finds the the correct position of the new
+    * Recursive component of addNode. Recursively finds the the correct position of the new
     * node
     ***************************************************************************/
-    private void addNode(T data, Node<T> top){
+    private void add(T data, Node<T> top){
         if(data.compareTo(top.getData())<=0)
         {
             //left
@@ -47,7 +47,7 @@ public class AVLTree<T extends Comparable <T>> {
                 
                 fixTree(0, n, null, null);
             }
-            else addNode(data, top.getLeft());
+            else add(data, top.getLeft());
         }
         else
         {
@@ -60,11 +60,14 @@ public class AVLTree<T extends Comparable <T>> {
                 
                 fixTree(0, n, null, null);
             }
-            else addNode(data, top.getRight());
+            else add(data, top.getRight());
             //right
         }
     }
-    
+    /***************************************************************************
+    * Called after a new node has been inserted. Step up through the tree and
+    * assign the correct height to each node and call rebalance when required
+    ***************************************************************************/
     private void fixTree(int height, Node<T> x, Node<T> y, Node<T> z){
         if(x == null) return;
 
@@ -83,6 +86,9 @@ public class AVLTree<T extends Comparable <T>> {
         fixTree(height+1, x.root, x, y);
     }
     
+    /***************************************************************************
+    * Steps up through the tree and corrects the height of each node
+    ***************************************************************************/
     private void fixHeight(Node<T> n)
     {
         if(n == null) return;
@@ -91,9 +97,10 @@ public class AVLTree<T extends Comparable <T>> {
         fixHeight(n.getRoot());
     }
     
-    /*******************************************************************************
-    *****Takes a node and returns the height of the node according to the height of it's children
-    *******************************************************************************/
+    /***************************************************************************
+    * Takes a node and returns the height of the node according to the height of
+    * it's children
+    ***************************************************************************/
     private int calcHeight(Node<T> n){
         Node<T> left = n.getLeft();
         Node<T> right = n.getRight();
@@ -102,20 +109,34 @@ public class AVLTree<T extends Comparable <T>> {
         return  Math.max(heightLeft, heightRight)+1;
     }
     
+    /***************************************************************************
+    * Takes a node and returns it's balance factor according to the height of 
+    * it's children
+    ***************************************************************************/ 
     private int balance(Node<T> n)
     {
         return Math.abs(( ((n.getLeft() == null)? -1 : n.getLeft().getHeight() ) - ((n.getRight() == null)? -1 : n.getRight().getHeight())));
     }
     
+    /***************************************************************************
+    * Takes a piece of data and return whether it's in the tree
+    ***************************************************************************/
     public boolean contains(T data){
         return findNode(data) != null;
     }
     
+    /***************************************************************************
+    * Takes a piece of data and returns the node that contains it or null if it
+    * does not exist
+    ***************************************************************************/
     private Node<T> findNode(T data)
     {
         return findNode(data, this.root);
     }
     
+    /***************************************************************************
+    * Recursive component of findNode
+    ***************************************************************************/
     private Node<T> findNode(T data, Node<T> top)
     {
         if(top == null){
@@ -130,6 +151,10 @@ public class AVLTree<T extends Comparable <T>> {
         }
     }
     
+    /***************************************************************************
+    * Takes a piece of data and deletes the node in the tree with that data.
+    * Returns false if nothing is deleted, true if the node is deleted
+    ***************************************************************************/
     public boolean delete(T data)
     {
         Node<T> deleteNode = findNode(data);
@@ -138,6 +163,10 @@ public class AVLTree<T extends Comparable <T>> {
         return true;
     }
     
+    /***************************************************************************
+    * Deletes the node passed from the tree then calls deleteFix on the parent
+    * of the deletedNode
+    ***************************************************************************/
     private void delete(Node<T> n)
     {
         Node<T> parent = n.getRoot();
@@ -213,6 +242,9 @@ public class AVLTree<T extends Comparable <T>> {
         }
     }
     
+    /***************************************************************************
+    * Takes a node and returns the child node with the greater height
+    ***************************************************************************/
     private Node<T> maxHeight(Node<T> n)
     {
         int leftHeight = (n.getLeft() == null) ? -1 : n.getLeft().getHeight();
@@ -221,6 +253,10 @@ public class AVLTree<T extends Comparable <T>> {
         return n.getRight();
     }
     
+    /***************************************************************************
+    * Steps up the tree while fixing the height and calling deleteBalance when
+    * there is an unbalanced node
+    ***************************************************************************/
     private void deleteFix(Node<T> top)
     {
         if(top == null) return;
@@ -233,6 +269,9 @@ public class AVLTree<T extends Comparable <T>> {
         deleteFix(parent);
     }
     
+    /***************************************************************************
+    * Steps down and finds the correct x, y, z nodes for rotation
+    ***************************************************************************/
     private void deleteBalance(Node<T> x)
     {
         Node<T> y, z;
@@ -242,12 +281,19 @@ public class AVLTree<T extends Comparable <T>> {
         rebalance(x,y,z);
     }
     
+    /***************************************************************************
+    * Returns the lowest valued child in the subtree of the passed node
+    ***************************************************************************/
     private Node<T> leftMost(Node<T> top)
     {
         if(top.getLeft() == null) return top;
         else return leftMost(top.getLeft());
     }
     
+    /***************************************************************************
+    * Takes x, y, z nodes and performs the correct rotations on them depending
+    * on orientation
+    ***************************************************************************/
     private void rebalance(Node<T> x, Node<T> y, Node<T> z)
     {
         
@@ -395,19 +441,25 @@ public class AVLTree<T extends Comparable <T>> {
         }
     }
     
+    /***************************************************************************
+    * Prints each node in the tree in-order
+    ***************************************************************************/
     public void printTree(){
-        printTreeRecursive(root);
+        printTree(root);
         System.out.println();
     }
     
-    public void printTreeRecursive(Node<T> top){
+    /***************************************************************************
+    * recursive component of printTree
+    ***************************************************************************/
+    public void printTree(Node<T> top){
         if(top.getLeft()!=null)
-            printTreeRecursive(top.getLeft());
+            printTree(top.getLeft());
         
         System.out.println(top.getData().toString() + " H(" + top.getHeight() + ")" + " D("+ top.getDirection() + ")");
         
         if(top.getRight()!=null)
-            printTreeRecursive(top.getRight());
+            printTree(top.getRight());
     }
 }
 
@@ -415,7 +467,10 @@ public class AVLTree<T extends Comparable <T>> {
 class Node<T extends Comparable <T>>{
     Node<T> left, right, root;
     T data;
-    int height, direction;
+    int height;
+    //Direction is the orientation of the node from it's root
+    //-1: left node. 1: right node. 0: it is the root of the tree.
+    int direction;
     
     //CONSTRUCTOR
     

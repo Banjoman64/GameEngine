@@ -17,6 +17,8 @@ import java.util.List;
  * @author wyatt
  */
 abstract class GameObject implements Comparable<GameObject>{
+    static int nextId = 0;
+    protected int id;
     static List<GameObject> objectList;
     static Point offset = new Point(0,0);
     protected double x, y;
@@ -27,7 +29,15 @@ abstract class GameObject implements Comparable<GameObject>{
 
     public abstract void step();
     public abstract void draw(Graphics g);
-
+    
+    public GameObject()
+    {
+        this.x = this.y = 0;
+        this.width = this.height = 0;
+        this.id = nextId;
+        nextId++;
+    }
+        
     //Getters
     public double getX(){
         return this.x;

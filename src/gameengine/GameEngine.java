@@ -126,8 +126,8 @@ public class GameEngine extends JFrame{
             xs[i] = Integer.parseInt(levelStrings.get(i).get(1));
             ys[i] = Integer.parseInt(levelStrings.get(i).get(2));
             
-            currentClass = new ClassData(names[i]);
-            objectList.add((GameObject)(currentClass).getNewObject(xs[i],ys[i]));
+            currentClass = new ClassData(names[i], xs[i], ys[i]);
+            objectList.add((GameObject)(currentClass).getGameObject());
         }
         
     }
@@ -146,7 +146,6 @@ public class GameEngine extends JFrame{
                 
                retval.add(Arrays.asList(line.split(" ",3)));
                
-               System.out.print("dddd");
                line = br.readLine();
                System.out.println(retval.get(loop).get(0));
                loop++;

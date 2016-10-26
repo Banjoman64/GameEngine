@@ -22,11 +22,14 @@ class ClassData{
     private GameObjectInterface mobj;
     
     public ClassData(String pieceName){
+        this(pieceName, 0, 0);
+    }
+    
+    public ClassData(String pieceName, int x, int y){
         try{
             className = getPieceAddress(pieceName);   
             cla = Class.forName(className);
-            obj = cla.newInstance();
-            
+            obj = cla.getDeclaredConstructor(Integer.class, Integer.class).newInstance(x,y);
             mobj = (GameObjectInterface)obj;
 
             text =  mobj.getName();
@@ -68,25 +71,22 @@ class ClassData{
         return obj;
     }
     
-    public GameObjectInterface getGameObjectInterface(){
+    public GameObjectInterface getGameObject(){
         return mobj;
     }
     
-    public GameObjectInterface getNewObject(int x,int y){
+    
+    
+    /*public GameObjectInterface getNewObject(int x,int y){
         try{
-            //Object obj = Class.forName(className).getConstructor(Integer.class, Integer.class).newInstance(x,y);
+            obj = cla.getDeclaredConstructor(Integer.class, Integer.class).newInstance(x,y);
+            mobj = (GameObjectInterface)obj;
+            return mobj;
             
-            /*Constructor ctor = GameObject.class.getDeclaredConstructor(Integer.class, Integer.class);
-	    ctor.setAccessible(true);
-	    GameObject obj = (GameObject)ctor.newInstance(x,y);
-            System.out.println(obj.getX());*/
-            Object o = cla.getDeclaredConstructor(Integer.class, Integer.class).newInstance(x,y);
-            GameObjectInterface oi = (GameObjectInterface)o;
-            
-            return oi;
+            //return oi;
         }catch(Exception e){
             System.out.println("woops");
             return null;
         }
-    }
+    }*/
 }

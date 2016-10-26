@@ -146,9 +146,9 @@ class LevelPanel extends JPanel implements MouseMotionListener{
                 if(LevelBuilder.chosenPiece!=null){
                     if(snapToGrid)
                     {
-                        objectList.add((GameObject)(new ClassData(LevelBuilder.chosenPiece)).getNewObject(mouse_x_grid,mouse_y_grid));
+                        objectList.add((GameObject)(new ClassData(LevelBuilder.chosenPiece, mouse_x_grid, mouse_y_grid).getGameObject()));
                     }else{
-                        objectList.add((GameObject)(new ClassData(LevelBuilder.chosenPiece)).getNewObject(mouse_x,mouse_y));
+                        objectList.add((GameObject)(new ClassData(LevelBuilder.chosenPiece, mouse_x, mouse_y).getGameObject()));
                     }
 
                 }

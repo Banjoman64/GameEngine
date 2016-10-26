@@ -21,6 +21,7 @@ public class Wall extends GameObject implements GameObjectInterface{
     
     private Color c = Color.BLACK;
     public Wall(){
+        //super();
         x = 0;
         y = 0;
         width = 32;
@@ -29,6 +30,7 @@ public class Wall extends GameObject implements GameObjectInterface{
     }
     
     public Wall(Integer x, Integer y){
+        //super();
         this.x = x;
         this.y = y;
         width = 32;
@@ -39,6 +41,8 @@ public class Wall extends GameObject implements GameObjectInterface{
     
     public void draw(Graphics g) {
         g.drawImage(sprite, (int)(x)-offset.x, (int)(y)-offset.y, null);
+        g.setColor(Color.WHITE);
+        g.drawString(Integer.toString(this.id), (int)(x)-offset.x, (int)(y)-offset.y);
     }
 
     @Override
