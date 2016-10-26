@@ -27,14 +27,14 @@ public class AVLTree<T extends Comparable <T>> {
         }
         
         //recursively add the node
-        addRecursive(data, this.root);
+        addNode(data, this.root);
     }
     
     /***************************************************************************
     * Called by addNode. Recursively finds the the correct position of the new
     * node
     ***************************************************************************/
-    private void addRecursive(T data, Node<T> top){
+    private void addNode(T data, Node<T> top){
         if(data.compareTo(top.getData())<=0)
         {
             //left
@@ -47,7 +47,7 @@ public class AVLTree<T extends Comparable <T>> {
                 
                 fixTree(0, n, null, null);
             }
-            else addRecursive(data, top.getLeft());
+            else addNode(data, top.getLeft());
         }
         else
         {
@@ -60,23 +60,35 @@ public class AVLTree<T extends Comparable <T>> {
                 
                 fixTree(0, n, null, null);
             }
-            else addRecursive(data, top.getRight());
+            else addNode(data, top.getRight());
             //right
         }
     }
     
-    private void fixTree(int height, Node<T> n, Node<T> child, Node<T> grandchild){
-        if(n == null) return;
+    private void fixTree(int height, Node<T> x, Node<T> y, Node<T> z){
+        if(x == null) return;
 
         
-        n.setHeight(height);
-        if(Math.abs(( ((n.getLeft() == null)? -1 : n.getLeft().getHeight() ) - ((n.getRight() == null)? -1 : n.getRight().getHeight())))>1)
+        x.setHeight(calcHeight(x));
+        
+        if(balance(x) > 1)
         {
-            rebalance(n, child, grandchild);
+            Node<T> parent = x.getRoot();
+            rebalance(x, y, z);
+            fixHeight(parent);
+            
             return;
             
         }
-        fixTree(height+1, n.root, n, child);
+        fixTree(height+1, x.root, x, y);
+    }
+    
+    private void fixHeight(Node<T> n)
+    {
+        if(n == null) return;
+        
+        n.setHeight(calcHeight(n));
+        fixHeight(n.getRoot());
     }
     
     /*******************************************************************************
@@ -90,149 +102,295 @@ public class AVLTree<T extends Comparable <T>> {
         return  Math.max(heightLeft, heightRight)+1;
     }
     
-    private void rebalance(Node<T> n, Node<T> child, Node<T> grandchild)
+    private int balance(Node<T> n)
+    {
+        return Math.abs(( ((n.getLeft() == null)? -1 : n.getLeft().getHeight() ) - ((n.getRight() == null)? -1 : n.getRight().getHeight())));
+    }
+    
+    public boolean contains(T data){
+        return findNode(data) != null;
+    }
+    
+    private Node<T> findNode(T data)
+    {
+        return findNode(data, this.root);
+    }
+    
+    private Node<T> findNode(T data, Node<T> top)
+    {
+        if(top == null){
+            return null;
+        }
+        if(data.compareTo(top.getData()) == 0){
+            return top;
+        }else if(data.compareTo(top.getData()) < 0){
+            return findNode(data, top.getLeft());
+        }else{
+            return findNode(data, top.getRight());
+        }
+    }
+    
+    public boolean delete(T data)
+    {
+        Node<T> deleteNode = findNode(data);
+        if(deleteNode == null) return false;
+        delete(deleteNode);
+        return true;
+    }
+    
+    private void delete(Node<T> n)
+    {
+        Node<T> parent = n.getRoot();
+        //2 children
+        if(n.getLeft() != null && n.getRight() != null)
+        {
+            //complicated double child stuff
+            //get replacement node
+            Node<T> leftMost = leftMost(n.getRight());
+            n.setData(leftMost.getData());
+            delete(leftMost);
+        }
+        //only left child
+        else if(n.getLeft() != null)
+        {
+            //replace with left node
+            Node<T> left = n.getLeft();
+            
+            if(n.getDirection() == 0)
+            {
+                root = left;
+                left.setDirection(0);
+            }else if(n.getDirection() == -1)
+            {
+                parent.setLeft(left);
+                left.setDirection(-1);
+            }else if(n.getDirection() == 1)
+            {
+                parent.setRight(left);
+                left.setDirection(1);
+            }
+            left.setRoot(parent);
+            deleteFix(parent);
+        }
+        //only right child
+        else if(n.getRight() != null)
+        {
+            //replace with right node
+            Node<T> right = n.getRight();
+            
+            if(n.getDirection() == 0)
+            {
+                root = right;
+                right.setDirection(0);
+            }else if(n.getDirection() == -1)
+            {
+                parent.setLeft(right);
+                right.setDirection(-1);
+            }else if(n.getDirection() == 1)
+            {
+                parent.setRight(right);
+                right.setDirection(1);
+            }
+            right.setRoot(parent);
+            deleteFix(parent);
+        }
+        else
+        {
+            //no children
+            //just delete
+
+            if(n.getDirection() == 0)
+            {
+                root = null;
+            }else if(n.getDirection() == -1)
+            {
+                parent.setLeft(null);
+            }else if(n.getDirection() == 1)
+            {
+                parent.setRight(null);
+            }
+            deleteFix(parent);
+        }
+    }
+    
+    private Node<T> maxHeight(Node<T> n)
+    {
+        int leftHeight = (n.getLeft() == null) ? -1 : n.getLeft().getHeight();
+        int rightHeight = (n.getRight() == null) ? -1 : n.getRight().getHeight();
+        if(leftHeight > rightHeight) return n.getLeft();
+        return n.getRight();
+    }
+    
+    private void deleteFix(Node<T> top)
+    {
+        if(top == null) return;
+        Node<T> parent = top.getRoot();
+        top.setHeight(calcHeight(top));
+        if(balance(top)>1)
+        {
+            deleteBalance(top);
+        }
+        deleteFix(parent);
+    }
+    
+    private void deleteBalance(Node<T> x)
+    {
+        Node<T> y, z;
+        y = maxHeight(x);
+        z = maxHeight(y);
+        
+        rebalance(x,y,z);
+    }
+    
+    private Node<T> leftMost(Node<T> top)
+    {
+        if(top.getLeft() == null) return top;
+        else return leftMost(top.getLeft());
+    }
+    
+    private void rebalance(Node<T> x, Node<T> y, Node<T> z)
     {
         
         
-        if(child.getDirection() == grandchild.getDirection())
+        if(y.getDirection() == z.getDirection())
         {
-            Node<T> upperRoot = n.getRoot();
-            if(child.getDirection() == 1)
+            Node<T> upperRoot = x.getRoot();
+            if(y.getDirection() == 1)
             {
                 //right right
-                //N right becomes child left
-                Node<T> childLeft = child.getLeft();
+                //N right becomes y left
+                Node<T> yLeft = y.getLeft();
                 
-                n.setRight(childLeft);
+                x.setRight(yLeft);
                 
-                if(childLeft!=null)
+                if(yLeft!=null)
                 {
-                    childLeft.setRoot(n);
-                    childLeft.setDirection(1);
+                    yLeft.setRoot(x);
+                    yLeft.setDirection(1);
                 }
                 //recalculate N height
                 
-                //set child to the new root
-                if (n.direction == 1)
-                    upperRoot.right = child;
-                else if (n.direction == -1)
-                    upperRoot.left = child;
+                //set y to the new root
+                if (x.direction == 1)
+                    upperRoot.right = y;
+                else if (x.direction == -1)
+                    upperRoot.left = y;
                 else
-                    root = child;
-                child.setDirection(n.direction);
-                child.setRoot(upperRoot);
+                    root = y;
+                y.setDirection(x.direction);
+                y.setRoot(upperRoot);
                 
-                //then N becomes new child left
+                //then N becomes new y left
                     
-                child.setLeft(n);
-                n.setRoot(child);
-                n.setDirection(-1);
+                y.setLeft(x);
+                x.setRoot(y);
+                x.setDirection(-1);
                 
-                //then recalcutlate child height
+                //then recalcutlate y height
                 //then move up the tree and fix the remaining heights
                 
-                n.setHeight(calcHeight(n));
-                child.setHeight(calcHeight(child));
+                x.setHeight(calcHeight(x));
+                y.setHeight(calcHeight(y));
                 
-                fixTree(child.getHeight()+1,child.getRoot(),null,null);
+                //fixTree(y.getHeight()+1,y.getRoot(),null,null);
                 
             }
             else
             {
                 //left left
-                Node<T> childRight = child.getRight();
+                Node<T> yRight = y.getRight();
                 
-                n.setLeft(childRight);
+                x.setLeft(yRight);
                 
-                if(childRight!=null)
+                if(yRight!=null)
                 {
-                    childRight.setRoot(n);
-                    childRight.setDirection(-1);
+                    yRight.setRoot(x);
+                    yRight.setDirection(-1);
                 }
                 
                 
                 
-                if (n.direction == 1)
-                    upperRoot.setRight(child);
-                else if (n.direction == -1)
-                    upperRoot.setLeft(child);
+                if (x.direction == 1)
+                    upperRoot.setRight(y);
+                else if (x.direction == -1)
+                    upperRoot.setLeft(y);
                 else
-                    root = child;
-                child.setDirection(n.direction);
-                child.setRoot(upperRoot);
+                    root = y;
+                y.setDirection(x.direction);
+                y.setRoot(upperRoot);
                 
-                child.setRight(n);
-                n.setRoot(child);
-                n.setDirection(1);
+                y.setRight(x);
+                x.setRoot(y);
+                x.setDirection(1);
                 
                 
-                n.setHeight(calcHeight(n));
-                child.setHeight(calcHeight(child));
+                x.setHeight(calcHeight(x));
+                y.setHeight(calcHeight(y));
                 
-                fixTree(child.getHeight()+1,child.getRoot(),null,null);
+                //fixTree(y.getHeight()+1,y.getRoot(),null,null);
             }
         }
         else
         {
-            if(child.getDirection() == 1)
+            if(y.getDirection() == 1)
             {
                 //right left
                 //A = N
-                //C = child
-                //D = grandchild
+                //C = y
+                //D = z
                 
-                //Right of grandchild becomes left of child
-                //Right of N becomes grandchild
-                //Right of grandchild becoms child
+                //Right of z becomes left of y
+                //Right of N becomes z
+                //Right of z becoms y
                 
-                Node<T> grandchildRight = grandchild.getRight();
-                child.setLeft(grandchildRight);
+                Node<T> zRight = z.getRight();
+                y.setLeft(zRight);
                 
-                if(grandchildRight!=null)
+                if(zRight!=null)
                 {
-                    grandchildRight.setDirection(-1);
-                    grandchildRight.setRoot(child);
+                    zRight.setDirection(-1);
+                    zRight.setRoot(y);
                 }
                 
-                n.setRight(grandchild);
-                grandchild.setDirection(1);
-                grandchild.setRoot(n);
+                x.setRight(z);
+                z.setDirection(1);
+                z.setRoot(x);
                 
-                grandchild.setRight(child);
-                child.setDirection(1);
-                child.setRoot(grandchild);
+                z.setRight(y);
+                y.setDirection(1);
+                y.setRoot(z);
                 
-                child.setHeight(calcHeight(child));
-                grandchild.setHeight(calcHeight(grandchild));
-                n.setHeight(calcHeight(n));
+                y.setHeight(calcHeight(y));
+                z.setHeight(calcHeight(z));
+                x.setHeight(calcHeight(x));
                 
-                rebalance(n, grandchild, child);
+                rebalance(x, z, y);
             }
             else
             {
                 //left right
-                Node<T> grandchildLeft = grandchild.getLeft();
-                child.setRight(grandchildLeft);
+                Node<T> zLeft = z.getLeft();
+                y.setRight(zLeft);
                 
-                if(grandchildLeft!=null)
+                if(zLeft!=null)
                 {
-                    grandchildLeft.setDirection(1);
-                    grandchildLeft.setRoot(child);
+                    zLeft.setDirection(1);
+                    zLeft.setRoot(y);
                 }
                 
-                n.setLeft(grandchild);
-                grandchild.setDirection(-1);
-                grandchild.setRoot(n);
+                x.setLeft(z);
+                z.setDirection(-1);
+                z.setRoot(x);
                 
-                grandchild.setLeft(child);
-                child.setDirection(-1);
-                child.setRoot(grandchild);
+                z.setLeft(y);
+                y.setDirection(-1);
+                y.setRoot(z);
                 
-                child.setHeight(calcHeight(child));
-                grandchild.setHeight(calcHeight(grandchild));
-                n.setHeight(calcHeight(n));
+                y.setHeight(calcHeight(y));
+                z.setHeight(calcHeight(z));
+                x.setHeight(calcHeight(x));
                 
-                rebalance(n, grandchild, child);
+                rebalance(x, z, y);
             }
         }
     }
@@ -266,6 +424,11 @@ class Node<T extends Comparable <T>>{
         this.data = data;
         left = right = root = null;
         height = direction = 0;
+    }
+    
+    @Override
+    public String toString(){
+        return data.toString();
     }
     
     //SETTERS

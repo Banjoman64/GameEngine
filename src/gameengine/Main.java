@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gameengine;
 
+package gameengine;
+import java.util.Random;
 /**
  *
  * @author wyatt
@@ -16,28 +17,30 @@ public class Main
         
         AVLTree<Integer> tree = new AVLTree<Integer>();
 
+        Random rand = new Random();
+        
         
                 
+        tree.addNode(50);
+        tree.addNode(25);
+        tree.addNode(75);
         tree.addNode(15);
-        tree.addNode(22);
-        tree.addNode(53);
-        tree.addNode(91);
-        tree.addNode(2);
-        tree.addNode(4);
-        tree.addNode(72);
+        tree.addNode(35);
+        tree.addNode(65);
         tree.addNode(85);
-        tree.addNode(18);
-        tree.addNode(81);
-        tree.addNode(40);
-        tree.addNode(60);
-        tree.addNode(95);
-        tree.addNode(88);
-        tree.addNode(33);
+        tree.addNode(14);
+        tree.addNode(16);
         
         tree.printTree();
         
+        tree.delete(75);
         
+        tree.printTree();
+        tree.delete(85);
         
+        tree.printTree();
+
+        /*
         
         if(true)
         {
@@ -46,6 +49,7 @@ public class Main
         {
             new LevelBuilder();
         }
+        */
     }
     
     
