@@ -42,10 +42,11 @@ public class Main
 
         
         
-        if(false)
+        if(true)
         {
             new GameEngine();
-        }else
+        }
+        else
         {
             new LevelBuilder();
         }

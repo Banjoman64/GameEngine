@@ -8,12 +8,14 @@ package gameengine;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.Point;
 
 /**
  *
  * @author wyatt
  */
-public class MouseInput implements MouseListener{
+public class MouseInput implements MouseListener, MouseMotionListener{
     private static final int button_count = 4;
     
     private enum ButtonState{
@@ -37,6 +39,7 @@ public class MouseInput implements MouseListener{
     }
     
     public synchronized void poll(){
+        //Mouse Buttons
         for(int i = 0 ; i < button_count ; i++){
             if(currentButtons[i]){
                 if(buttons[i]==ButtonState.RELEASED || buttons[i]==ButtonState.UP){
@@ -53,6 +56,9 @@ public class MouseInput implements MouseListener{
                 
             }
         }
+        
+        //Mouse Coordinates
+        mouse_coord.setLocation(mouse_event_coord);
     }
     
     public boolean buttonPressed(int buttonCode){
@@ -100,4 +106,68 @@ public class MouseInput implements MouseListener{
     }
     
     
+    private Point mouse_event_coord = new Point(0,0);
+    private Point mouse_coord = new Point(0,0);
+    private Point offset = new Point(0,0);
+    
+     @Override
+    public synchronized void mouseDragged(MouseEvent me) {
+        updateEventCoord(me);
+    }
+
+    @Override
+    public synchronized void mouseMoved(MouseEvent me) {
+        updateEventCoord(me);
+    }
+    
+    private void updateEventCoord(MouseEvent me){
+        mouse_event_coord.setLocation(me.getX(), me.getY());
+    }
+    
+    public int mouse_x()
+    {
+        return (int)(mouse_coord.getX() + offset.getX());
+    }
+    
+    public int mouse_y()
+    {
+        return (int)(mouse_coord.getY() + offset.getY());
+    }
+    
+    public Point mouse_point()
+    {
+        return new Point((int)( mouse_coord.getX() + offset.getX() ), (int)( mouse_coord.getY() + offset.getX() ));
+    }
+    
+    public int mouse_panel_x(){
+        return (int)mouse_coord.getX();
+    }
+    
+    public int mouse_panel_y(){
+        return (int)mouse_coord.getY();
+    }
+    
+    public Point mouse_panel_point()
+    {
+        return mouse_coord;
+    }
+    
+    public void setOffset(Point p)
+    {
+        offset.setLocation(p);
+    }
+    
+    public void setOffsetX(int x){
+        offset.x = x;
+    }
+    
+    public void setOffsetY(int y)
+    {
+        offset.y = y;
+    }
+    
+    public void setOffsetInstance(Point p)
+    {
+        offset = p;
+    }
 }

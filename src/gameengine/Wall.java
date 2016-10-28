@@ -15,22 +15,16 @@ import java.awt.image.BufferedImage;
  * @author wyatt
  */
 public class Wall extends GameObject implements GameObjectInterface{
-    public static String className = "Wall";
-    public static BufferedImage icon = Sprite.getSprite(2, 0);
     public static BufferedImage sprite = Sprite.getSprite(2, 0);
     
     private Color c = Color.BLACK;
     public Wall(){
-        //super();
-        x = 0;
-        y = 0;
-        width = 32;
-        height = 32;
-        tags.add("solid");
+        this(0,0);
     }
     
     public Wall(Integer x, Integer y){
-        //super();
+        icon = sprite;
+        className = "Wall";
         this.x = x;
         this.y = y;
         width = 32;
@@ -39,39 +33,16 @@ public class Wall extends GameObject implements GameObjectInterface{
         sprite = icon;
     }
     
+    @Override
     public void draw(Graphics g) {
-        g.drawImage(sprite, (int)(x)-offset.x, (int)(y)-offset.y, null);
+        drawSprite(g, sprite, (int)(x), (int)(y));
         g.setColor(Color.WHITE);
-        g.drawString(Integer.toString(this.id), (int)(x)-offset.x, (int)(y)-offset.y);
+        drawText(g, Integer.toString(this.id), (int)(x), (int)(y));
     }
+
 
     @Override
     public void step() {
-        if( collisionSquare(Wall.class) != null ){
-            c = Color.RED;
-        }
-        else{
-            c = Color.YELLOW;
-        }
+        
     }
-    
-    @Override
-    public String toString(){
-        return className;
-    }
-
-    @Override
-    public String getName() {
-        return className;
-    }
-    
-    public void wut(){
-        System.out.print("yo");
-    }
-
-    @Override
-    public BufferedImage getIcon() {
-        return icon;
-    }
-    
 }

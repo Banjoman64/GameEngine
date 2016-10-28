@@ -10,13 +10,20 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  *
  * @author wyatt
  */
-abstract class GameObject implements Comparable<GameObject>{
+abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
+{
+    protected String className = "NoName";
+    protected BufferedImage icon = Sprite.getSprite(2, 0);
+    static KeyboardInput keyboard;
+    static MouseInput mouse;
+    static HashMap<Integer, GameObject> objectMap = new HashMap<Integer, GameObject>();
     static int nextId = 0;
     protected int id;
     static List<GameObject> objectList;
@@ -35,7 +42,17 @@ abstract class GameObject implements Comparable<GameObject>{
         this.x = this.y = 0;
         this.width = this.height = 0;
         this.id = nextId;
+        
+        GameObject o = this;
+        objectMap.put(this.id, o);
+        
         nextId++;
+    }
+    
+    public static void setInput(KeyboardInput k, MouseInput m)
+    {
+        keyboard = k;
+        mouse = m;
     }
         
     //Getters
@@ -52,8 +69,6 @@ abstract class GameObject implements Comparable<GameObject>{
         return this.height;
     }
 
-    public abstract String getName();
-
     //Setters
     public void setX(double x){
         this.x = x;
@@ -67,6 +82,17 @@ abstract class GameObject implements Comparable<GameObject>{
     public void setHeight(double height){
         this.height = height;
     }
+    
+    public void drawSprite(Graphics g, BufferedImage sprite, int x, int y)
+    {
+        g.drawImage(sprite, (int)(x)-offset.x, (int)(y)-offset.y, null);
+    }
+    
+    public void drawText(Graphics g, String s, int x, int y)
+    {
+        g.drawString(s, x-offset.x, y-offset.y);
+    }
+    
     //CollisionPoint
     public static GameObject collisionPoint(String s, int x, int y){
         GameObject result;
@@ -245,9 +271,6 @@ abstract class GameObject implements Comparable<GameObject>{
         this.y = lastY;
         return objList;
     }
-    
-    @Override
-    public abstract String toString();
 
     public static void setOffset(Point p)
     {
@@ -259,5 +282,15 @@ abstract class GameObject implements Comparable<GameObject>{
         return (int) (this.depth - t.depth);
     }
 
+    @Override
+    public BufferedImage getIcon() {
+        return icon;
+    }
+    
+    @Override
+    public String getName() {
+        return className;
+    }
 
+    
 }

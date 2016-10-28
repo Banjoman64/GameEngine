@@ -31,42 +31,19 @@ public class GameEngine extends JFrame{
     private GamePanel gamePanel;
     public static List<GameObject> objectList = new ArrayList<GameObject>();
     long start_time = System.currentTimeMillis();
-    public static KeyboardInput keyboardInput;
-    public static MouseInput mouseInput;
-    
-    //private LevelBuilder lb;
-    
-    
-    int num = 0;
-    /**
-     * @param args the command line arguments
-     */
-    //public static void main(String[] args){
-    //    new GameEngine();
-        
-    //}
     
     public GameEngine(){
-        //initialize KeyboardInput
-        GameEngine.keyboardInput = new KeyboardInput();
-        GameEngine.mouseInput = new MouseInput();
-        
         //initialize JFrame and JPanel
         gamePanel = new GamePanel(objectList);
         gamePanel.setVisible(true);
         gamePanel.setPreferredSize(new Dimension(640,640));
         gamePanel.setBackground(Color.WHITE);
         gamePanel.setFocusable(true);
-        gamePanel.addKeyListener(GameEngine.keyboardInput);
-        gamePanel.addMouseListener(GameEngine.mouseInput);
-        //gamePanel.addKeyListener(keyboardInput);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(gamePanel, java.awt.BorderLayout.CENTER);
         setResizable(false);
         setVisible(true);
-        setFocusable(true);
-        addKeyListener(GameEngine.keyboardInput);
-        addMouseListener(GameEngine.mouseInput);
+        setFocusable(false);
         pack();
         
         
@@ -85,12 +62,8 @@ public class GameEngine extends JFrame{
         int sleep_time = 0;
         
         while(gameRunning){
-            GameEngine.keyboardInput.poll();
-            GameEngine.mouseInput.poll();
-            
-                updateGame();
-                displayGame();
-
+            updateGame();
+            displayGame();
             
             
             next_game_tick += skip_ticks;
@@ -164,9 +137,7 @@ public class GameEngine extends JFrame{
     }
     
     private void updateGame(){
-        for(GameObject o : objectList){
-            o.step();
-        }
+        gamePanel.update();
     }
     
     private void displayGame(){

@@ -16,8 +16,6 @@ import java.awt.image.BufferedImage;
  * @author wyatt
  */
 public class Ball extends GameObject implements GameObjectInterface{
-    public static String className = "Ball";
-    public static BufferedImage icon = Sprite.getSprite(0, 2);
     
     private BufferedImage[] idleFrames = {Sprite.getSprite(0,1),Sprite.getSprite(1,1)};
     private BufferedImage[] walkFrames = {Sprite.getSprite(0,2),Sprite.getSprite(1,2),Sprite.getSprite(2,2),Sprite.getSprite(3,2),};
@@ -39,16 +37,12 @@ public class Ball extends GameObject implements GameObjectInterface{
     
     
     public Ball(){
-        //super();
-        x = 0;
-        y = 0;
-        
-        width = 32;
-        height = 32;
+        this(0,0);
     }
     
     public Ball(Integer x, Integer y){
-        //super();
+        className = "Ball";
+        icon = Sprite.getSprite(0,2);
         this.x = x;
         this.y = y;
         width = 32;
@@ -59,9 +53,9 @@ public class Ball extends GameObject implements GameObjectInterface{
     
     @Override
     public void step() {
-        key_right = GameEngine.keyboardInput.keyDown(KeyEvent.VK_RIGHT);
-        key_left = GameEngine.keyboardInput.keyDown(KeyEvent.VK_LEFT);
-        key_space = GameEngine.keyboardInput.keyDown(KeyEvent.VK_SPACE);
+        key_right = GameObject.keyboard.keyDown(KeyEvent.VK_RIGHT);
+        key_left = GameObject.keyboard.keyDown(KeyEvent.VK_LEFT);
+        key_space = GameObject.keyboard.keyDown(KeyEvent.VK_SPACE);
         
         if(key_right){
             hsp = move_speed;
@@ -132,24 +126,9 @@ public class Ball extends GameObject implements GameObjectInterface{
     }
 
     @Override
-    public String toString() {
-        return className;
-    }
-
-    @Override
-    public String getName() {
-        return className;
-    }
-    
-     @Override
-    public BufferedImage getIcon() {
-        return icon;
-    }
-
-    @Override
     public void draw(Graphics g) {
-        g.drawImage(sprite.getSprite(), (int)(x)-offset.x, (int)(y)-offset.y, null);
+        drawSprite(g, sprite.getSprite(), (int)x, (int)y);
         g.setColor(Color.WHITE);
-        g.drawString(Integer.toString(this.id), (int)(x)-offset.x, (int)(y)-offset.y);
+        drawText(g, Integer.toString(this.id), (int)x, (int)y);
     }
 }

@@ -20,7 +20,4 @@ public interface GameObjectInterface {
     
     public String getName();
     public BufferedImage getIcon();
-    
-    @Override
-    public abstract String toString();
 }

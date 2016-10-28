@@ -58,35 +58,16 @@ public class LevelBuilder extends JFrame{
     public static List<GameObject> objectList = new ArrayList<GameObject>();
     public static String chosenPiece = "Ball";
     long start_time = System.currentTimeMillis();
-    public static KeyboardInput keyboardInput;
-    public static MouseInput mouseInput;
-    
     
     public LevelBuilder(){
-        LevelBuilder.keyboardInput = new KeyboardInput();
-        LevelBuilder.mouseInput = new MouseInput();
         
         pieceList.add("Ball");
-        pieceList.add("Ball");
         pieceList.add("Wall");
-        pieceList.add("Ball");
-        pieceList.add("Wall");
-        pieceList.add("Ball");
-        pieceList.add("Ball");
-        pieceList.add("Wall");
-        pieceList.add("Ball");
-        pieceList.add("Wall");
-        pieceList.add("Ball");
-        pieceList.add("Ball");
-        pieceList.add("Wall");
-        pieceList.add("Ball");
-        pieceList.add("Wall");
+        pieceList.add("BackGround");
         
         setFocusable(true);
-        addKeyListener(LevelBuilder.keyboardInput);
-        addMouseListener(LevelBuilder.mouseInput);
         initializeFrame();
-        
+        GameObject.objectList = objectList;
     }
     
     private void initializeFrame(){
@@ -100,22 +81,13 @@ public class LevelBuilder extends JFrame{
         gb = new JPanel(gbl);
         gb.setPreferredSize(new Dimension(110,640));
         GridBagConstraints c = new GridBagConstraints();
-        gb.setFocusable(true);
-        gb.addKeyListener(LevelBuilder.keyboardInput);
-        gb.addMouseListener(LevelBuilder.mouseInput);
+
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 1.0;
         c.weighty = 1.0;
         c.gridx = 0;
         
-        //Add Buttons To The Grid
-        /*for(int i  = 0 ; i < 30 ; i++){
-            tempButton = new JButton("Button " + i);
-            gbl.setConstraints(tempButton, c);
-            gb.add(tempButton);
-            gb.setPreferredSize(new Dimension(110,32*i));;
-        }*/
         for(int i  = 0 ; i < pieceList.size() ; i++){
             ClassData classData = new ClassData((String)pieceList.get(i));
             tempButton = new LevelButton(classData);
@@ -132,32 +104,22 @@ public class LevelBuilder extends JFrame{
         }
         
         //Scroll Pane For Grid
-        sp = new JScrollPane(gb);////////////////////////////////////
+        sp = new JScrollPane(gb);
         sp.setPreferredSize(new Dimension(128,640));
-        sp.setFocusable(true);
-        sp.addKeyListener(LevelBuilder.keyboardInput);
-        sp.addMouseListener(LevelBuilder.mouseInput);
+
         //Level Display
         lp = new LevelPanel(objectList);
         lp.setVisible(true);
         lp.setPreferredSize(new Dimension(640,640));
-        lp.setFocusable(true);
-        lp.addKeyListener(LevelBuilder.keyboardInput);
-        lp.addMouseListener(LevelBuilder.mouseInput);
         
          //top bar
         tb = new JPanel();
-        tb.setFocusable(false);
-        //tb.setPreferredSize(new Dimension(640,48));
         
-        
+        //Grid Buttons
         JLabel jl = new JLabel("Grid X: ");
-        jl.setFocusable(false);
-        
         tb.add(jl);
         
         fieldGridX = new JTextField(4);
-        //fieldGridX.setFocusable(false);
         fieldGridX.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldActionPerformed(evt);
@@ -166,11 +128,9 @@ public class LevelBuilder extends JFrame{
         tb.add(fieldGridX);
         
         jl = new JLabel("Grid Y: ");
-        jl.setFocusable(false);
         tb.add(jl);
         
         fieldGridY = new JTextField(4);
-        //fieldGridY.setFocusable(false);
         fieldGridY.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldActionPerformed(evt);
@@ -204,11 +164,7 @@ public class LevelBuilder extends JFrame{
         getContentPane().add(tb, java.awt.BorderLayout.NORTH);
         setResizable(true);
         setVisible(true);
-        setFocusable(true);
-        setAlwaysOnTop(true);
         pack();
-        
-        GameObject.objectList = objectList;
         
         //Begin Loop************************************************************
         boolean gameRunning = true;
@@ -219,13 +175,9 @@ public class LevelBuilder extends JFrame{
         
         int sleep_time = 0;
         
-        while(gameRunning){
-            LevelBuilder.keyboardInput.poll();
-            LevelBuilder.mouseInput.poll();
-            
-                updateBuilder();
-                displayBuilder();
-            
+        while(gameRunning){         
+            updateBuilder();
+            displayBuilder();
             
             next_game_tick += skip_ticks;
             sleep_time = (int) (next_game_tick - getTickCount());
@@ -248,9 +200,6 @@ public class LevelBuilder extends JFrame{
     }
     
     public void updateBuilder(){
-        /*for(GameObject o : objectList){
-            o.step();
-        }*/
         lp.update();
     }
     
