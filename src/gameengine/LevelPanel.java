@@ -7,6 +7,8 @@ package gameengine;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.PointerInfo;
 import java.awt.event.KeyEvent;
@@ -15,6 +17,8 @@ import java.awt.event.MouseMotionListener;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.swing.FocusManager;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -22,7 +26,9 @@ import javax.swing.JPanel;
  * @author wyatt
  */
 class LevelPanel extends JPanel{
-    private List<GameObject> objectList;
+    private AVLTree<GameObject> objectList;
+    
+    private JLabel coordinateLabel;
     
     //private int other_x;
     private boolean snapToGrid = true;
@@ -44,34 +50,53 @@ class LevelPanel extends JPanel{
     private MouseInput mouse;
     private KeyboardInput keyboard;
     
-    public LevelPanel(List<GameObject> objectList){
+    private Double zoom = 1.0;
+    
+    public LevelPanel(AVLTree<GameObject> objectList){
         this.objectList = objectList;
         
         mouse = new MouseInput();
         mouse.setOffsetInstance(offset);
+        mouse.setZoomInstance(zoom);
         keyboard = new KeyboardInput();
         
         addKeyListener(keyboard);
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
+        addMouseWheelListener(mouse);
         
         GameObject.setInput(keyboard, mouse);
         
-        requestFocusInWindow();
-        
-        //addMouseMotionListener(this);
-        
-       // GameObject.objectList = objectList;
+        //requestFocus();
+        //requestFocusInWindow();
     }
     
     @Override
     public void paintComponent(Graphics g){
+
         super.paintComponent( g );
+        
         clearDisplay(g);
+        
+        Graphics2D g2 = (Graphics2D) g;
+        int w = this.getWidth();// real width of canvas
+        int h = this.getHeight();// real height of canvas
+        // Translate used to make sure scale is centered
+        //g2.translate(w/2, h/2);
+        g2.scale(zoom, zoom);
+        //g2.translate(-w/2, -h/2);     
+        
+        
         drawGUI(g);
         drawGameObjects(g);
         
         g.setColor(Color.red);
+        
+        
+    }
+    
+    public void setCoordinateLabel(JLabel l){
+        coordinateLabel = l;
     }
     
     private void clearDisplay(Graphics g){
@@ -88,6 +113,7 @@ class LevelPanel extends JPanel{
     private void drawGUI(Graphics g){
         g.setColor(Color.BLACK);
         drawGridLines(g);
+        g.drawLine((int)(0-offset.x/zoom), (int)(-1000-offset.y/zoom), (int)(0-offset.x/zoom), (int)(1000-offset.y/zoom));
         
         if(selecting){
             g.drawRect(leftClickLeftX-(int)offset.getX(), leftClickLeftY-(int)offset.getY(), mouse.mouse_x() - leftClickLeftX, mouse.mouse_y() - leftClickLeftY);
@@ -118,19 +144,29 @@ class LevelPanel extends JPanel{
         keyboard.poll();
         mouse.poll();
         
-         if(keyboard.keyDown(KeyEvent.VK_X)){
-            LevelBuilder.exportLevel();
-            System.out.println("swwwsww");
+        coordinateLabel.setText("(" + mouse.mouse_x() + "," + mouse.mouse_y() + ")");
+        
+        if(mouse.hasScrolled())
+        {
+            zoom-=(.2*mouse.scroll());
+            GameObject.setZoom(zoom);
+            mouse.setZoom(zoom);
         }
+        
+        if(keyboard.keyDown(KeyEvent.VK_CONTROL))
+            {
+                System.out.println("YOOO");
+            }
         
         if(mouse.buttonPressed(MouseEvent.BUTTON1)){
             
             if(keyboard.keyDown(KeyEvent.VK_CONTROL))
             {
+                System.out.println("YOOO");
                 List<GameObject> del = GameObject.collisionPointList(GameObject.class, mouse.mouse_x(), mouse.mouse_y());
                 for(GameObject o : del){
                     System.out.println(o.toString());
-                    objectList.remove(o);
+                    objectList.delete(o);
                 }
             }else{
                 leftClickLeftX = mouse.mouse_x();

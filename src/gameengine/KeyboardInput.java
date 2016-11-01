@@ -55,6 +55,7 @@ public class KeyboardInput implements KeyListener{
     }
     
     public boolean keyPressed(int keyCode){
+        System.out.println("OOOOH");
         return keys[keyCode] == KeyState.PRESSED;
     }
     

@@ -31,18 +31,31 @@ public class Main
         tree.add(14);
         tree.add(16);
         
-        tree.printTree();
+        for(int i : tree)
+            System.out.println(i);
         
-        tree.delete(75);
+        AVLTree<GameObject> tree2 = new AVLTree<GameObject>();
         
-        tree.printTree();
-        tree.delete(85);
+        tree2.add(new Ball(0,0));
+        tree2.add(new Ball(0,0));
+        tree2.add(new Wall(0,0));
+        tree2.add(new Ball(0,0));
         
-        tree.printTree();
+        for(GameObject o : tree2)
+            System.out.println(o.compareValue());
+        
+        GameObject a, b;
+        a = new Wall(0,0);
+        b = new Ball(0,0);
+        
+        System.out.println(a.compareTo(b));
+        
+        
+        
 
         
         
-        if(true)
+        if(false)
         {
             new GameEngine();
         }

@@ -43,11 +43,12 @@ public class Ball extends GameObject implements GameObjectInterface{
     public Ball(Integer x, Integer y){
         className = "Ball";
         icon = Sprite.getSprite(0,2);
+        this.depth = 4;
         this.x = x;
         this.y = y;
         width = 32;
         height = 32;
-        sprite = walkAnimation;
+        sprite = idleAnimation;
         sprite.start();
     }
     
@@ -128,7 +129,7 @@ public class Ball extends GameObject implements GameObjectInterface{
     @Override
     public void draw(Graphics g) {
         drawSprite(g, sprite.getSprite(), (int)x, (int)y);
-        g.setColor(Color.WHITE);
-        drawText(g, Integer.toString(this.id), (int)x, (int)y);
+        g.setColor(Color.black);
+        drawText(g, "("+x+","+y+")", (int)x, (int)y);
     }
 }

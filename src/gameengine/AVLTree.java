@@ -5,11 +5,14 @@
  */
 package gameengine;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  *
  * @author wyatt
  */
-public class AVLTree<T extends Comparable <T>> {
+public class AVLTree<T extends Comparable <T>> implements Iterable<T>{
     //declare/initialize the top node object to null
     Node<T> root = null;
     
@@ -35,6 +38,7 @@ public class AVLTree<T extends Comparable <T>> {
     * node
     ***************************************************************************/
     private void add(T data, Node<T> top){
+        
         if(data.compareTo(top.getData())<=0)
         {
             //left
@@ -460,6 +464,25 @@ public class AVLTree<T extends Comparable <T>> {
         
         if(top.getRight()!=null)
             printTree(top.getRight());
+    }
+    
+    public ArrayList<T> toArrayList(){
+        ArrayList<T> l = new ArrayList<T>();
+        return toArrayList(l, root);
+    }
+    
+    private ArrayList<T> toArrayList(ArrayList<T> l, Node<T> n){
+        if(n == null) return l;
+        toArrayList(l, n.getLeft());
+        l.add(n.data);
+        toArrayList(l, n.getRight());
+        return l;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        ArrayList<T> it = toArrayList();
+        return it.iterator();
     }
 }
 

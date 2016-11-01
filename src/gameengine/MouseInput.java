@@ -10,12 +10,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.Point;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 /**
  *
  * @author wyatt
  */
-public class MouseInput implements MouseListener, MouseMotionListener{
+public class MouseInput implements MouseListener, MouseMotionListener, MouseWheelListener{
     private static final int button_count = 4;
     
     private enum ButtonState{
@@ -59,6 +61,19 @@ public class MouseInput implements MouseListener, MouseMotionListener{
         
         //Mouse Coordinates
         mouse_coord.setLocation(mouse_event_coord);
+        
+        //Mouse Scroll
+        if(scroll)
+        {
+            notches = event_notches;
+            hasScrolled = true;
+        }
+        else
+        {
+            notches = 0;
+            hasScrolled = false;
+        }
+        scroll = false;
     }
     
     public boolean buttonPressed(int buttonCode){
@@ -109,6 +124,7 @@ public class MouseInput implements MouseListener, MouseMotionListener{
     private Point mouse_event_coord = new Point(0,0);
     private Point mouse_coord = new Point(0,0);
     private Point offset = new Point(0,0);
+    private Double zoom = 1.0;
     
      @Override
     public synchronized void mouseDragged(MouseEvent me) {
@@ -126,17 +142,17 @@ public class MouseInput implements MouseListener, MouseMotionListener{
     
     public int mouse_x()
     {
-        return (int)(mouse_coord.getX() + offset.getX());
+        return (int)((mouse_coord.getX() + offset.getX())/zoom);
     }
     
     public int mouse_y()
     {
-        return (int)(mouse_coord.getY() + offset.getY());
+        return (int)((mouse_coord.getY() + offset.getY())/zoom);
     }
     
     public Point mouse_point()
     {
-        return new Point((int)( mouse_coord.getX() + offset.getX() ), (int)( mouse_coord.getY() + offset.getX() ));
+        return new Point((int)(( mouse_coord.getX() + offset.getX())/zoom), (int)(( mouse_coord.getY() + offset.getX() )/zoom));
     }
     
     public int mouse_panel_x(){
@@ -169,5 +185,36 @@ public class MouseInput implements MouseListener, MouseMotionListener{
     public void setOffsetInstance(Point p)
     {
         offset = p;
+    }
+    
+    public void setZoom(Double z){
+        zoom = z;
+    }
+    
+    public void setZoomInstance(Double z){
+        zoom = z;
+    }
+    
+    //Scrolling
+    
+    int notches = 0;
+    int event_notches = 0;
+    boolean scroll = false;
+    boolean hasScrolled = false;
+    
+    public int scroll(){
+        return notches;
+    }
+    
+    public boolean hasScrolled()
+    {
+        return hasScrolled;
+    }
+    
+    @Override
+    public synchronized void mouseWheelMoved(MouseWheelEvent mwe) {
+        event_notches = mwe.getWheelRotation();
+        System.out.println(event_notches);
+        scroll = true;
     }
 }

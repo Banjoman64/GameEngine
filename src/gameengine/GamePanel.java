@@ -20,9 +20,9 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel{
     private KeyboardInput keyboard;
     private MouseInput mouse;
-    private List<GameObject> objectList;
+    private AVLTree<GameObject> objectList;
     
-    public GamePanel(List<GameObject> objectList){
+    public GamePanel(AVLTree<GameObject> objectList){
         this.objectList = objectList;
         
         mouse = new MouseInput();
@@ -59,14 +59,8 @@ public class GamePanel extends JPanel{
     }
     
     private void drawGameObjects(Graphics g){
-        if(mouse.buttonDown(MouseEvent.BUTTON1)) g.drawString("hey", mouse.mouse_x(), mouse.mouse_y());
         for(GameObject o : objectList){
             o.draw(g);
-        }
-        Iterator it = GameObject.objectMap.entrySet().iterator();
-        while(it.hasNext()){
-            GameObject o = (GameObject)((Map.Entry)it.next()).getValue();
-            System.out.println(o.getName());
         }
     }
 }

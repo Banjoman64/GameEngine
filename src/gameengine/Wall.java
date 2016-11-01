@@ -25,6 +25,7 @@ public class Wall extends GameObject implements GameObjectInterface{
     public Wall(Integer x, Integer y){
         icon = sprite;
         className = "Wall";
+        this.depth = 1;
         this.x = x;
         this.y = y;
         width = 32;

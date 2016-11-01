@@ -10,6 +10,7 @@ public class BackGround extends GameObject implements GameObjectInterface{
     }
     
     public BackGround(Integer x, Integer y){
+        this.depth = 0;
         this.x = x;
         this.y = y;
         width = 32;

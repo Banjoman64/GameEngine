@@ -26,10 +26,11 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     static HashMap<Integer, GameObject> objectMap = new HashMap<Integer, GameObject>();
     static int nextId = 0;
     protected int id;
-    static List<GameObject> objectList;
+    static AVLTree<GameObject> objectList;
     static Point offset = new Point(0,0);
+    static Double zoom = 1.0;
     protected double x, y;
-    protected double depth;
+    protected int depth;
 
     protected double width, height;
     protected List<String> tags = new ArrayList<String>();
@@ -41,6 +42,7 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     {
         this.x = this.y = 0;
         this.width = this.height = 0;
+        this.depth = 1000;
         this.id = nextId;
         
         GameObject o = this;
@@ -53,6 +55,11 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     {
         keyboard = k;
         mouse = m;
+    }
+    
+    public static void setZoom(double z)
+    {
+        zoom = z;
     }
         
     //Getters
@@ -85,12 +92,12 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     
     public void drawSprite(Graphics g, BufferedImage sprite, int x, int y)
     {
-        g.drawImage(sprite, (int)(x)-offset.x, (int)(y)-offset.y, null);
+        g.drawImage(sprite, (int)(x-offset.x/zoom), (int)(y-offset.y/zoom), null);
     }
     
     public void drawText(Graphics g, String s, int x, int y)
     {
-        g.drawString(s, x-offset.x, y-offset.y);
+        g.drawString(s, (int)(x-offset.x/zoom), (int)(y-offset.y));
     }
     
     //CollisionPoint
@@ -146,6 +153,7 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     public static List<GameObject> collisionPointList(Class c, int x, int y){
         List<GameObject> objList = new ArrayList<GameObject>();
         GameObject result;
+        System.out.println(objectList);
         for(GameObject o : objectList){
             if(c.isInstance(o)){
                 result = collisionPoint(o, x, y);
@@ -276,10 +284,22 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     {
         offset = p;
     }
+    
+    public long compareValue(){
+        long val = this.depth;
+        val = val<<32;
+        val+=this.id;
+        return val;
+    }
 
     @Override
     public int compareTo(GameObject t) {
-        return (int) (this.depth - t.depth);
+        System.out.println("m");
+        if(this.compareValue() < t.compareValue())
+            return -1;
+        if(this.compareValue() > t.compareValue())
+            return 1;
+        return 0;
     }
 
     @Override

@@ -13,9 +13,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.KeyboardFocusManager;
 import java.awt.ScrollPane;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -44,18 +41,20 @@ import javax.xml.transform.Source;
  * @author wyatt
  */
 public class LevelBuilder extends JFrame{
-    LevelPanel lp;
-    private JScrollPane sp;
-    private JPanel jp;
-    private JPanel gb;
-    private JPanel tb;
+    private LevelPanel lp;
+    
+    private JPanel bottomPanel;
+    private JScrollPane objectScrollPane;
+    private JPanel objectButtonPanel;
+    private JPanel topPanel;
     private JTextField fieldGridX;
     private JTextField fieldGridY;
+    private JLabel mouseCoord;
     private JButton tempButton;
     private JButton showGridButton;
     private JButton exportButton;
     private List<String> pieceList = new ArrayList<String>();
-    public static List<GameObject> objectList = new ArrayList<GameObject>();
+    public static AVLTree<GameObject> objectList = new AVLTree<GameObject>();
     public static String chosenPiece = "Ball";
     long start_time = System.currentTimeMillis();
     
@@ -65,21 +64,21 @@ public class LevelBuilder extends JFrame{
         pieceList.add("Wall");
         pieceList.add("BackGround");
         
-        setFocusable(true);
-        initializeFrame();
         GameObject.objectList = objectList;
+        initializeFrame();
+        beginLoop();
+        
     }
     
-    private void initializeFrame(){
+    private void initializeFrame(){        
         
-        
-        
-                
-        
+        /***********************************************************************
+        * Object Panel
+        ***********************************************************************/
         //Grid Bag Layout
         GridBagLayout gbl = new GridBagLayout();
-        gb = new JPanel(gbl);
-        gb.setPreferredSize(new Dimension(110,640));
+        objectButtonPanel = new JPanel(gbl);
+        objectButtonPanel.setPreferredSize(new Dimension(110,640));
         GridBagConstraints c = new GridBagConstraints();
 
         c.anchor = GridBagConstraints.PAGE_START;
@@ -93,8 +92,8 @@ public class LevelBuilder extends JFrame{
             tempButton = new LevelButton(classData);
             tempButton.setFocusable(false);
             gbl.setConstraints(tempButton, c);
-            gb.add(tempButton);
-            gb.setPreferredSize(new Dimension(110,72*i));
+            objectButtonPanel.add(tempButton);
+            objectButtonPanel.setPreferredSize(new Dimension(110,72*i));
             
             tempButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -104,20 +103,22 @@ public class LevelBuilder extends JFrame{
         }
         
         //Scroll Pane For Grid
-        sp = new JScrollPane(gb);
-        sp.setPreferredSize(new Dimension(128,640));
+        objectScrollPane = new JScrollPane(objectButtonPanel);
+        objectScrollPane.setPreferredSize(new Dimension(128,640));
 
         //Level Display
         lp = new LevelPanel(objectList);
         lp.setVisible(true);
         lp.setPreferredSize(new Dimension(640,640));
         
-         //top bar
-        tb = new JPanel();
+        /***********************************************************************
+        * Top Panel
+        ***********************************************************************/
+        topPanel = new JPanel();
         
         //Grid Buttons
         JLabel jl = new JLabel("Grid X: ");
-        tb.add(jl);
+        topPanel.add(jl);
         
         fieldGridX = new JTextField(4);
         fieldGridX.addActionListener(new java.awt.event.ActionListener() {
@@ -125,10 +126,10 @@ public class LevelBuilder extends JFrame{
                 fieldActionPerformed(evt);
             }
         });
-        tb.add(fieldGridX);
+        topPanel.add(fieldGridX);
         
         jl = new JLabel("Grid Y: ");
-        tb.add(jl);
+        topPanel.add(jl);
         
         fieldGridY = new JTextField(4);
         fieldGridY.addActionListener(new java.awt.event.ActionListener() {
@@ -136,7 +137,7 @@ public class LevelBuilder extends JFrame{
                 fieldActionPerformed(evt);
             }
         });
-        tb.add(fieldGridY);
+        topPanel.add(fieldGridY);
         
         showGridButton = new JButton("Show Grid");
         showGridButton.addActionListener(new java.awt.event.ActionListener() {
@@ -145,7 +146,7 @@ public class LevelBuilder extends JFrame{
             }
         });
         
-        tb.add(showGridButton);
+        topPanel.add(showGridButton);
         
         exportButton = new JButton("Export");
         exportButton.addActionListener(new java.awt.event.ActionListener() {
@@ -154,18 +155,37 @@ public class LevelBuilder extends JFrame{
             }
         });
         
-        tb.add(exportButton);
-
+        topPanel.add(exportButton);
+        
+        /***********************************************************************
+        * Bottom Panel
+        ***********************************************************************/
+        bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+        
+        
+        mouseCoord = new JLabel("(0,0)");
+        bottomPanel.add(Box.createRigidArea(new Dimension(1,0)));
+        bottomPanel.add(mouseCoord);
+        mouseCoord.setAlignmentX(RIGHT_ALIGNMENT);
+        
         //Add It All Together
         getContentPane().setLayout(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         getContentPane().add(lp, java.awt.BorderLayout.CENTER);
-        getContentPane().add(sp, java.awt.BorderLayout.WEST);
-        getContentPane().add(tb, java.awt.BorderLayout.NORTH);
+        getContentPane().add(objectScrollPane, java.awt.BorderLayout.WEST);
+        getContentPane().add(topPanel, java.awt.BorderLayout.NORTH);
+        getContentPane().add(bottomPanel, java.awt.BorderLayout.SOUTH);
         setResizable(true);
         setVisible(true);
         pack();
-        
+
+        lp.requestFocusInWindow();
+        lp.setCoordinateLabel(mouseCoord);
+    }
+    
+    private void beginLoop()
+    {
         //Begin Loop************************************************************
         boolean gameRunning = true;
         int frames_per_second = 30;
@@ -223,6 +243,7 @@ public class LevelBuilder extends JFrame{
         {
             exportLevel();
         }
+        
         lp.requestFocusInWindow();
     }
     

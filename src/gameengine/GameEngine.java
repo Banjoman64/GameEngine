@@ -29,7 +29,7 @@ import org.reflections.Reflections;
  */
 public class GameEngine extends JFrame{
     private GamePanel gamePanel;
-    public static List<GameObject> objectList = new ArrayList<GameObject>();
+    public static AVLTree<GameObject> objectList = new AVLTree<GameObject>();
     long start_time = System.currentTimeMillis();
     
     public GameEngine(){
