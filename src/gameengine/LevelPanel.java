@@ -127,14 +127,14 @@ class LevelPanel extends JPanel{
             if (gridX > 1 )
             {
                 int gridOffset = ((int)offset.getX()+panOffsetX)%gridX;
-                for(int i = (-3*gridX)-gridOffset ; i < getWidth() ; i+=gridX)
+                for(int i = (-3*gridX)-gridOffset ; i < getWidth()/zoom ; i+=gridX)
                     g.drawLine(i, -1, i, getHeight()+1);
             }
 
             if (gridY > 1 )
             {
                 int gridOffset = ((int)offset.getY()+panOffsetY)%gridY;
-                for(int i = (-3*gridY)-gridOffset ; i < getHeight() ; i+=gridY)
+                for(int i = (-3*gridY)-gridOffset ; i < getHeight()/zoom ; i+=gridY)
                     g.drawLine(-1, i, getWidth()+1, i);
             }
         }
@@ -189,8 +189,8 @@ class LevelPanel extends JPanel{
         }
         
         if(mouse.buttonPressed(MouseEvent.BUTTON3)){
-            rightClickLeftX = mouse.mouse_x();
-            rightClickLeftY = mouse.mouse_y();
+            rightClickLeftX = mouse.mouse_panel_x();
+            rightClickLeftY = mouse.mouse_panel_y();
             panning = true;
         }else if(mouse.buttonReleased(MouseEvent.BUTTON3)){
             panning = false;
@@ -200,8 +200,8 @@ class LevelPanel extends JPanel{
         }
         if(panning)
         {
-            panOffsetX = -(mouse.mouse_x() - rightClickLeftX);
-            panOffsetY = -(mouse.mouse_y() - rightClickLeftY);
+            panOffsetX = -(mouse.mouse_panel_x() - rightClickLeftX);
+            panOffsetY = -(mouse.mouse_panel_y() - rightClickLeftY);
         }
         
         GameObject.setOffset(new Point((int)offset.getX()+panOffsetX,(int)offset.getY()+panOffsetY));
