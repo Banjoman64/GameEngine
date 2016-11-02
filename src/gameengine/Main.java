@@ -5,6 +5,8 @@
  */
 
 package gameengine;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.util.Random;
 /**
  *
@@ -55,7 +57,7 @@ public class Main
 
         
         
-        if(!true)
+        if(true)
         {
             new GameEngine();
         }

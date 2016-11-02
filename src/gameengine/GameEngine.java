@@ -42,10 +42,13 @@ public class GameEngine extends JFrame{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(gamePanel, java.awt.BorderLayout.CENTER);
         setResizable(false);
+        setUndecorated(true);
         setVisible(true);
         setFocusable(false);
-        pack();
         
+        
+        pack();
+        setExtendedState(JFrame.MAXIMIZED_BOTH); 
         
         GameObject.objectList = objectList;
         loadLevel(new String("newLevel.txt"));

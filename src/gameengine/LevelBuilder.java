@@ -177,8 +177,10 @@ public class LevelBuilder extends JFrame{
         getContentPane().add(topPanel, java.awt.BorderLayout.NORTH);
         getContentPane().add(bottomPanel, java.awt.BorderLayout.SOUTH);
         setResizable(true);
+        setUndecorated(true);
         setVisible(true);
         pack();
+        setExtendedState(JFrame.MAXIMIZED_BOTH); 
 
         lp.requestFocusInWindow();
         lp.setCoordinateLabel(mouseCoord);
