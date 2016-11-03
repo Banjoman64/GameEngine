@@ -26,9 +26,10 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     static HashMap<Integer, GameObject> objectMap = new HashMap<Integer, GameObject>();
     static int nextId = 0;
     protected int id;
-    static AVLTree<GameObject> objectList;
+    static AVLTree<GameObject> objectList = new AVLTree<GameObject>();
     static Point offset = new Point(0,0);
-    static Double zoom = 1.0;
+    static Double xZoom = 1.0;
+    static Double yZoom = 1.0;
     protected double x, y;
     protected int depth;
 
@@ -57,9 +58,20 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
         mouse = m;
     }
     
-    public static void setZoom(double z)
+    public static void setZoom(double x, double y)
     {
-        zoom = z;
+        xZoom = x;
+        yZoom = y;
+    }
+    
+    public static void setZoomX(double x)
+    {
+        xZoom = x;
+    }
+    
+    public static void setZoomY(double y)
+    {  
+        yZoom = y;
     }
         
     //Getters
@@ -92,12 +104,12 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     
     public void drawSprite(Graphics g, BufferedImage sprite, int x, int y)
     {
-        g.drawImage(sprite, (int)(x-offset.x/zoom), (int)(y-offset.y/zoom), null);
+        g.drawImage(sprite, (int)(x-offset.x/xZoom), (int)(y-offset.y/yZoom), null);
     }
     
     public void drawText(Graphics g, String s, int x, int y)
     {
-        g.drawString(s, (int)(x-offset.x/zoom), (int)(y-offset.y));
+        g.drawString(s, (int)(x-offset.x/xZoom), (int)(y-offset.y/yZoom));
     }
     
     //CollisionPoint
@@ -294,7 +306,6 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
 
     @Override
     public int compareTo(GameObject t) {
-        System.out.println("m");
         if(this.compareValue() < t.compareValue())
             return -1;
         if(this.compareValue() > t.compareValue())

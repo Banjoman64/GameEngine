@@ -54,7 +54,7 @@ public class LevelBuilder extends JFrame{
     private JButton showGridButton;
     private JButton exportButton;
     private List<String> pieceList = new ArrayList<String>();
-    public static AVLTree<GameObject> objectList = new AVLTree<GameObject>();
+    public static AVLTree<GameObject> objectList;
     public static String chosenPiece = "Ball";
     long start_time = System.currentTimeMillis();
     
@@ -64,7 +64,7 @@ public class LevelBuilder extends JFrame{
         pieceList.add("Wall");
         pieceList.add("BackGround");
         
-        GameObject.objectList = objectList;
+        objectList = GameObject.objectList;
         initializeFrame();
         beginLoop();
         

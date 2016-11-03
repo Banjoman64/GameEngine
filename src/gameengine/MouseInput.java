@@ -124,7 +124,8 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
     private Point mouse_event_coord = new Point(0,0);
     private Point mouse_coord = new Point(0,0);
     private Point offset = new Point(0,0);
-    private Double zoom = 1.0;
+    private Double xZoom = 1.0;
+    private Double yZoom = 1.0;
     
      @Override
     public synchronized void mouseDragged(MouseEvent me) {
@@ -142,17 +143,17 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
     
     public int mouse_x()
     {
-        return (int)((mouse_coord.getX() + offset.getX())/zoom);
+        return (int)((mouse_coord.getX() + offset.getX())/xZoom);
     }
     
     public int mouse_y()
     {
-        return (int)((mouse_coord.getY() + offset.getY())/zoom);
+        return (int)((mouse_coord.getY() + offset.getY())/yZoom);
     }
     
     public Point mouse_point()
     {
-        return new Point((int)(( mouse_coord.getX() + offset.getX())/zoom), (int)(( mouse_coord.getY() + offset.getX() )/zoom));
+        return new Point((int)(( mouse_coord.getX() + offset.getX())/xZoom), (int)(( mouse_coord.getY() + offset.getX() )/yZoom));
     }
     
     public int mouse_panel_x(){
@@ -187,12 +188,22 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
         offset = p;
     }
     
-    public void setZoom(Double z){
-        zoom = z;
+    public void setXZoom(double z){
+        xZoom = z;
     }
     
-    public void setZoomInstance(Double z){
-        zoom = z;
+    public void setYZoom(double z){
+        yZoom = z;
+    }
+    
+    public void setZoom(double x, double y){
+        xZoom = x;
+        yZoom = y;
+    }
+    
+    public void setZoomInstance(Double x, Double y){
+        xZoom = x;
+        yZoom = y;
     }
     
     //Scrolling

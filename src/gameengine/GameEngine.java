@@ -29,10 +29,11 @@ import org.reflections.Reflections;
  */
 public class GameEngine extends JFrame{
     private GamePanel gamePanel;
-    public static AVLTree<GameObject> objectList = new AVLTree<GameObject>();
+    public static AVLTree<GameObject> objectList;
     long start_time = System.currentTimeMillis();
     
     public GameEngine(){
+        objectList = GameObject.objectList;
         //initialize JFrame and JPanel
         gamePanel = new GamePanel(objectList);
         gamePanel.setVisible(true);
@@ -41,19 +42,23 @@ public class GameEngine extends JFrame{
         gamePanel.setFocusable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(gamePanel, java.awt.BorderLayout.CENTER);
-        setResizable(false);
-        setUndecorated(true);
+        setResizable(true);
+        //setUndecorated(true);
         setVisible(true);
         setFocusable(false);
         
         
         pack();
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         
-        GameObject.objectList = objectList;
+        
+        
+        
         loadLevel(new String("newLevel.txt"));
         
+        displayGame();
         
+        gamePanel.initializeViews();
         
         //Begin Loop************************************************************
         boolean gameRunning = true;

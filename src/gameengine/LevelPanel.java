@@ -30,7 +30,6 @@ class LevelPanel extends JPanel{
     
     private JLabel coordinateLabel;
     
-    //private int other_x;
     private boolean snapToGrid = true;
     
     private int gridX = 0;
@@ -50,14 +49,15 @@ class LevelPanel extends JPanel{
     private MouseInput mouse;
     private KeyboardInput keyboard;
     
-    private Double zoom = 1.0;
+    private Double xZoom = 1.0;
+    private Double yZoom = 1.0;
     
     public LevelPanel(AVLTree<GameObject> objectList){
         this.objectList = objectList;
         
         mouse = new MouseInput();
         mouse.setOffsetInstance(offset);
-        mouse.setZoomInstance(zoom);
+        mouse.setZoomInstance(xZoom, yZoom);
         keyboard = new KeyboardInput();
         
         addKeyListener(keyboard);
@@ -69,6 +69,7 @@ class LevelPanel extends JPanel{
         
         //requestFocus();
         //requestFocusInWindow();
+        
     }
     
     @Override
@@ -83,7 +84,7 @@ class LevelPanel extends JPanel{
         int h = this.getHeight();// real height of canvas
         // Translate used to make sure scale is centered
         //g2.translate(w/2, h/2);
-        g2.scale(zoom, zoom);
+        g2.scale(xZoom, yZoom);
         //g2.translate(-w/2, -h/2);     
         
         
@@ -113,7 +114,7 @@ class LevelPanel extends JPanel{
     private void drawGUI(Graphics g){
         g.setColor(Color.BLACK);
         drawGridLines(g);
-        g.drawLine((int)(0-offset.x/zoom), (int)(-1000-offset.y/zoom), (int)(0-offset.x/zoom), (int)(1000-offset.y/zoom));
+        g.drawLine((int)(0-offset.x/xZoom), (int)(-1000-offset.y/yZoom), (int)(0-offset.x/xZoom), (int)(1000-offset.y/yZoom));
         
         if(selecting){
             g.drawRect(leftClickLeftX-(int)offset.getX(), leftClickLeftY-(int)offset.getY(), mouse.mouse_x() - leftClickLeftX, mouse.mouse_y() - leftClickLeftY);
@@ -127,14 +128,14 @@ class LevelPanel extends JPanel{
             if (gridX > 1 )
             {
                 int gridOffset = ((int)offset.getX()+panOffsetX)%gridX;
-                for(int i = (-3*gridX)-gridOffset ; i < getWidth()/zoom ; i+=gridX)
+                for(int i = (-3*gridX)-gridOffset ; i < getWidth()/xZoom ; i+=gridX)
                     g.drawLine(i, -1, i, getHeight()+1);
             }
 
             if (gridY > 1 )
             {
                 int gridOffset = ((int)offset.getY()+panOffsetY)%gridY;
-                for(int i = (-3*gridY)-gridOffset ; i < getHeight()/zoom ; i+=gridY)
+                for(int i = (-3*gridY)-gridOffset ; i < getHeight()/yZoom ; i+=gridY)
                     g.drawLine(-1, i, getWidth()+1, i);
             }
         }
@@ -148,9 +149,10 @@ class LevelPanel extends JPanel{
         
         if(mouse.hasScrolled())
         {
-            zoom-=(.2*mouse.scroll());
-            GameObject.setZoom(zoom);
-            mouse.setZoom(zoom);
+            xZoom-=(.2*mouse.scroll());
+            yZoom-=(.2*mouse.scroll());
+            GameObject.setZoom(xZoom, yZoom);
+            mouse.setZoom(xZoom, yZoom);
         }
         
         if(keyboard.keyDown(KeyEvent.VK_CONTROL))
