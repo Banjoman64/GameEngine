@@ -46,7 +46,6 @@ public class LevelButton extends JButton{
     
     public Dimension getPreferredSize() {
         Dimension size = super.getPreferredSize();
-        size.width += size.height;
         return size;
     }
     

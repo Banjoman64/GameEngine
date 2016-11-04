@@ -6,6 +6,7 @@
 package gameengine;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -32,7 +33,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import static javax.swing.ScrollPaneConstants.*;
 import javax.xml.transform.Source;
 
@@ -43,16 +46,21 @@ import javax.xml.transform.Source;
 public class LevelBuilder extends JFrame{
     private LevelPanel lp;
     
-    private JPanel bottomPanel;
+    private JPanel      bottomPanel;
+    
+    private JPanel      objectButtonPanel;
+    private JPanel      topPanel;
+    private JPanel      objectScrollPanel;
+    private JButton     tempButton;
+    private JButton     showGridButton;
+    private JButton     exportButton;
     private JScrollPane objectScrollPane;
-    private JPanel objectButtonPanel;
-    private JPanel topPanel;
-    private JTextField fieldGridX;
-    private JTextField fieldGridY;
-    private JLabel mouseCoord;
-    private JButton tempButton;
-    private JButton showGridButton;
-    private JButton exportButton;
+    private JTabbedPane leftTabbedPane;
+    private JTextField  fieldGridX;
+    private JTextField  fieldGridY;
+    private JLabel      mouseCoord;
+    
+    
     private List<String> pieceList = new ArrayList<String>();
     public static AVLTree<GameObject> objectList;
     public static String chosenPiece = "Ball";
@@ -64,6 +72,10 @@ public class LevelBuilder extends JFrame{
         pieceList.add("Wall");
         pieceList.add("BackGround");
         
+        
+        
+        
+        
         objectList = GameObject.objectList;
         initializeFrame();
         beginLoop();
@@ -74,26 +86,23 @@ public class LevelBuilder extends JFrame{
         
         /***********************************************************************
         * Object Panel
-        ***********************************************************************/
-        //Grid Bag Layout
-        GridBagLayout gbl = new GridBagLayout();
-        objectButtonPanel = new JPanel(gbl);
-        objectButtonPanel.setPreferredSize(new Dimension(110,640));
-        GridBagConstraints c = new GridBagConstraints();
-
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.fill = GridBagConstraints.BOTH;
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        c.gridx = 0;
+        ***********************************************************************/    
+        objectScrollPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5,5));
+        objectScrollPanel.setPreferredSize(new Dimension(256, 300));
         
-        for(int i  = 0 ; i < pieceList.size() ; i++){
+        
+        
+        
+        int i;
+        for(i  = 0 ; i < pieceList.size() ; i++){
             ClassData classData = new ClassData((String)pieceList.get(i));
             tempButton = new LevelButton(classData);
             tempButton.setFocusable(false);
-            gbl.setConstraints(tempButton, c);
-            objectButtonPanel.add(tempButton);
-            objectButtonPanel.setPreferredSize(new Dimension(110,72*i));
+            tempButton.setPreferredSize(new Dimension(111,72));
+
+            
+            objectScrollPanel.add(tempButton);
+            objectScrollPanel.setPreferredSize(new Dimension(100, (72+5)*(int)Math.ceil((i+1)/2.0) + 5));
             
             tempButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -103,9 +112,22 @@ public class LevelBuilder extends JFrame{
         }
         
         //Scroll Pane For Grid
-        objectScrollPane = new JScrollPane(objectButtonPanel);
-        objectScrollPane.setPreferredSize(new Dimension(128,640));
-
+        objectScrollPane = new JScrollPane(objectScrollPanel);
+        objectScrollPane.setPreferredSize(new Dimension(256,640));
+        objectScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        objectScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        
+        
+        
+        leftTabbedPane = new JTabbedPane();
+        leftTabbedPane.addTab( "Objects",objectScrollPane);
+        leftTabbedPane.addTab("Views", new JPanel());
+        leftTabbedPane.addTab("Example", new JPanel());
+        leftTabbedPane.addTab("Example", new JPanel());
+        leftTabbedPane.addTab("Example", new JPanel());
+        leftTabbedPane.addTab("Example", new JPanel());
+        
+        
         //Level Display
         lp = new LevelPanel(objectList);
         lp.setVisible(true);
@@ -173,11 +195,11 @@ public class LevelBuilder extends JFrame{
         getContentPane().setLayout(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         getContentPane().add(lp, java.awt.BorderLayout.CENTER);
-        getContentPane().add(objectScrollPane, java.awt.BorderLayout.WEST);
+        getContentPane().add(leftTabbedPane, java.awt.BorderLayout.WEST);
         getContentPane().add(topPanel, java.awt.BorderLayout.NORTH);
         getContentPane().add(bottomPanel, java.awt.BorderLayout.SOUTH);
         setResizable(true);
-        setUndecorated(true);
+        //setUndecorated(true);
         setVisible(true);
         pack();
         setExtendedState(JFrame.MAXIMIZED_BOTH); 

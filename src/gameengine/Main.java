@@ -57,7 +57,7 @@ public class Main
 
         
         
-        if(true)
+        if(!true)
         {
             new GameEngine();
         }
