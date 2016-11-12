@@ -40,6 +40,7 @@ public class GamePanel extends JPanel{
         addMouseMotionListener(mouse);
         
         GameObject.setInput(keyboard, mouse);
+        initializeViews();
     }
     
     public void initializeViews()

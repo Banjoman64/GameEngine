@@ -71,6 +71,48 @@ public class LevelBuilder extends JFrame{
         pieceList.add("Ball");
         pieceList.add("Wall");
         pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
+        pieceList.add("Ball");
+        pieceList.add("Wall");
+        pieceList.add("BackGround");
         
         
         

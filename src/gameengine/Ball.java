@@ -116,6 +116,7 @@ public class Ball extends GameObject implements GameObjectInterface{
             }
             if(vsp>0){
                 grounded = true;
+                new Sound().playBackGround("jumpland");
             }
             vsp = 0;
             

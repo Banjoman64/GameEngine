@@ -58,7 +58,7 @@ public class GameEngine extends JFrame{
         
         displayGame();
         
-        gamePanel.initializeViews();
+        
         
         //Begin Loop************************************************************
         boolean gameRunning = true;
