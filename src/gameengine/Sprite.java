@@ -20,7 +20,7 @@ public class Sprite {
     public static BufferedImage loadSprite(String fileName){
         BufferedImage sprite = null;
         try{
-            sprite = ImageIO.read(new File(fileName+".png"));
+            sprite = ImageIO.read(new File(fileName+ ".png"));
         }catch(Exception e){
             e.printStackTrace();
         }
