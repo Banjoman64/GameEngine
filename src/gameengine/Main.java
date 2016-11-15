@@ -16,7 +16,10 @@ public class Main
 {
     public static void main(String [] args)
     {
-        ActivityManager.playSound();
+        Sound s = new Sound();
+        try{
+        s.start();
+        }catch(Exception e){}
         
         if(true)
         {
