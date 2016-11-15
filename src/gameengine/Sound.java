@@ -13,7 +13,6 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
@@ -24,16 +23,18 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * @author wyatt
  */
 public class Sound {
-    public void start() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException{
+    private Clip clip;
+    public Sound(String string) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException{
         
         InputStream inputStream;
-        inputStream = getClass().getResourceAsStream("Sounds/freeze.wav");
+        inputStream = getClass().getResourceAsStream("Sounds/"+string+".wav");
+        
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputStream);
         
         AudioFormat audioFormat = audioInputStream.getFormat();
         
         DataLine.Info info = new DataLine.Info(Clip.class, audioFormat);
-        Clip clip = (Clip) AudioSystem.getLine(info);
+        clip = (Clip) AudioSystem.getLine(info);
 
         clip.open(audioInputStream);
         
@@ -41,13 +42,27 @@ public class Sound {
             public void update(LineEvent event){
                 if(event.getType() == LineEvent.Type.STOP){
                     event.getLine().close();
-                    System.exit(0);
                 }
             }
         });
-        
+        clip.loop(6);
         clip.start();
-        TimeUnit.SECONDS.sleep(3);
+    }
+    
+    public void start(){
         clip.start();
+    }
+    
+    public void restart(){
+        clip.setFramePosition(0);
+        clip.start();
+    }
+    
+    public void stop(){
+        clip.stop();
+    }
+    
+    public void loop(int l){
+        clip.loop(l);
     }
 }

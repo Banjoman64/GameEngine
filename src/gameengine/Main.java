@@ -8,6 +8,7 @@ package gameengine;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 /**
  *
  * @author wyatt
@@ -16,9 +17,11 @@ public class Main
 {
     public static void main(String [] args)
     {
-        Sound s = new Sound();
         try{
-        s.start();
+        Sound s = new Sound("freeze");
+        
+        TimeUnit.SECONDS.sleep(2);
+        s.loop(-1);
         }catch(Exception e){}
         
         if(true)
