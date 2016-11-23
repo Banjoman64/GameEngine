@@ -5,6 +5,7 @@
  */
 
 package gameengine;
+import gameengine.Collision.*;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.Random;
@@ -17,12 +18,9 @@ public class Main
 {
     public static void main(String [] args)
     {
-        try{
-        Sound s = new Sound("freeze");
+        //SoundLine s = new SoundLine("Jump Radio EQ", 0.7f);
         
-        TimeUnit.SECONDS.sleep(2);
-        s.loop(-1);
-        }catch(Exception e){}
+        new Rectangle(3.14f/4.0f, 2, 2, 1, 1);
         
         if(true)
         {
