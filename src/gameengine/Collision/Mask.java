@@ -11,7 +11,7 @@ public class Mask implements Iterable{
     }
     
     public Mask(ArrayList<Shape> a){
-        mask = (ArrayList<Shape>) a.clone();
+        mask = new ArrayList<Shape>(a);
     }
     
     public void add(Shape a){

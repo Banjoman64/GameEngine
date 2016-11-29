@@ -5,6 +5,7 @@
  */
 package gameengine;
 
+import gameengine.Collision.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -34,7 +35,10 @@ public class Ball extends GameObject implements GameObjectInterface{
     private boolean key_right = false;
     private boolean key_space = false;
     
-    
+    private Rectangle r;
+    private int sweg = 2;
+    private int scale = 100;
+    private int w = 20, h = 40;
     
     public Ball(){
         this(0,0);
@@ -50,10 +54,19 @@ public class Ball extends GameObject implements GameObjectInterface{
         height = 32;
         sprite = idleAnimation;
         sprite.start();
+        r = new Rectangle(0, w, h, 50, 50);
     }
     
     @Override
     public void step() {
+        scale += sweg;
+        r.setHeight(h*scale/100);
+        r.setWidth(w*scale/100);
+        r.setAngle(r.angle+.1f);
+        
+        if(scale < 50 || scale > 400)
+            sweg = -sweg;
+        
         key_right = GameObject.keyboard.keyDown(KeyEvent.VK_RIGHT);
         key_left = GameObject.keyboard.keyDown(KeyEvent.VK_LEFT);
         key_space = GameObject.keyboard.keyDown(KeyEvent.VK_SPACE);
@@ -131,5 +144,6 @@ public class Ball extends GameObject implements GameObjectInterface{
         drawSprite(g, sprite.getSprite(), (int)x, (int)y);
         g.setColor(Color.black);
         drawText(g, "("+x+","+y+")", (int)x, (int)y);
+        r.draw(g);
     }
 }

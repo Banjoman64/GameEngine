@@ -128,7 +128,6 @@ public class GameEngine extends JFrame{
                retval.add(Arrays.asList(line.split(" ",3)));
                
                line = br.readLine();
-               System.out.println(retval.get(loop).get(0));
                loop++;
             }
             
@@ -136,7 +135,7 @@ public class GameEngine extends JFrame{
         
         return retval;
         }catch(FileNotFoundException e){
-            System.out.print("hey");
+            e.printStackTrace();
             return null;
         } catch (IOException ex) {
             Logger.getLogger(GameEngine.class.getName()).log(Level.SEVERE, null, ex);

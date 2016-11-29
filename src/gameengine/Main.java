@@ -18,9 +18,13 @@ public class Main
 {
     public static void main(String [] args)
     {
-        //SoundLine s = new SoundLine("Jump Radio EQ", 0.7f);
+        try{
+        SoundLine s = new SoundLine("chimer", 1.0f);
         
-        new Rectangle(3.14f/4.0f, 2, 2, 1, 1);
+        }catch(Exception e){}
+        new Rectangle(0, 4, 2, 0, 0);
+        
+        new Rectangle(3.14f/4f, 4, 2, 0, 0);
         
         if(true)
         {
