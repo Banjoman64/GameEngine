@@ -36,9 +36,11 @@ public class Ball extends GameObject implements GameObjectInterface{
     private boolean key_space = false;
     
     private Rectangle r;
-    private int sweg = 2;
-    private int scale = 100;
-    private int w = 20, h = 40;
+    private Rectangle r2;
+    
+    Color colColor = Color.BLACK;
+
+    private int w = 200, h = 400;
     
     public Ball(){
         this(0,0);
@@ -55,17 +57,16 @@ public class Ball extends GameObject implements GameObjectInterface{
         sprite = idleAnimation;
         sprite.start();
         r = new Rectangle(0, w, h, 50, 50);
+        r2 = new Rectangle(3.14f/4f, w, h, 50, 50);
     }
     
     @Override
     public void step() {
-        scale += sweg;
-        r.setHeight(h*scale/100);
-        r.setWidth(w*scale/100);
-        r.setAngle(r.angle+.1f);
+        r.setLocation((float)x, (float)y);
+        r2.setLocation(GameObject.mouse.mouse_x(), GameObject.mouse.mouse_y());
         
-        if(scale < 50 || scale > 400)
-            sweg = -sweg;
+        if(Collisions.collision(r, r2)) colColor = Color.RED;
+        else                            colColor = Color.BLACK;
         
         key_right = GameObject.keyboard.keyDown(KeyEvent.VK_RIGHT);
         key_left = GameObject.keyboard.keyDown(KeyEvent.VK_LEFT);
@@ -144,6 +145,8 @@ public class Ball extends GameObject implements GameObjectInterface{
         drawSprite(g, sprite.getSprite(), (int)x, (int)y);
         g.setColor(Color.black);
         drawText(g, "("+x+","+y+")", (int)x, (int)y);
-        r.draw(g);
+        r.draw(g, colColor);
+        r2.draw(g, colColor);
+        Collisions.draw(g);
     }
 }

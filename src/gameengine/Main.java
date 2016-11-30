@@ -22,9 +22,8 @@ public class Main
         SoundLine s = new SoundLine("chimer", 1.0f);
         
         }catch(Exception e){}
-        new Rectangle(0, 4, 2, 0, 0);
         
-        new Rectangle(3.14f/4f, 4, 2, 0, 0);
+        System.out.println(Collisions.collision(new Rectangle(0, 4, 2, 0, 0),new Rectangle(0, 4, 2, 20, 20)));
         
         if(true)
         {
