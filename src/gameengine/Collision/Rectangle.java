@@ -1,5 +1,6 @@
 package gameengine.Collision;
 
+import static gameengine.Collision.Collisions.vectorProj;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
@@ -57,11 +58,12 @@ public class Rectangle implements Shape{
         }
         
         vectors = new float[2][2];
-        for( int i = 0 ; i < 2 ; i++ )
-        {
-           vectors[i][0] = corners[i][0] - corners[i+1][0];
-           vectors[i][1] = corners[i][1] - corners[i+1][1];
-        }
+        
+           vectors[0][0] = corners[0][0] - corners[1][0];
+           vectors[0][1] = corners[0][1] - corners[1][1];
+           vectors[1][0] = corners[1][0] - corners[2][0];
+           vectors[1][1] = corners[1][1] - corners[2][1];
+        
     }
     
     public void setAngle(float a)
@@ -116,12 +118,24 @@ public class Rectangle implements Shape{
         g.setColor(Color.YELLOW);
         for( int i = 0 ; i < 4 ; i++ ){
             g.fillOval((int)corners[i][0]-5/2, (int)corners[i][1]-5/2, 5, 5);
+            g.drawString(Integer.toString(i), (int)corners[i][0], (int)corners[i][1]);
             
         }
         g.setColor(Color.RED);
         g.drawLine((int)x, (int)y, (int)(x+vectors[0][0]), (int)(y+vectors[0][1]));
+        //g.drawLine(250, 250, (int)(250+vectors[0][0]), (int)(250+vectors[0][1]));
         g.setColor(Color.BLUE);
         g.drawLine((int)x, (int)y, (int)(x+vectors[1][0]), (int)(y+vectors[1][1]));
+        //g.drawLine(250, 250, (int)(250+vectors[1][0]), (int)(250+vectors[1][1]));
+        
+        /*g.setColor(Color.GREEN);
+        for( int i = 0 ; i < 2 ; i++ ){
+            if(i==1)g.setColor(Color.ORANGE);
+            for( int j = 0 ; j < 4 ; j++ ){
+                float[] proj = vectorProj(corners[j][0], corners[j][1], vectors[i][0], vectors[i][1]);
+                g.fillOval((int)(proj[0])-5/2, (int)(proj[1])-5/2, 5, 5);
+            }
+        }*/
     }
     
 }

@@ -19,7 +19,7 @@ public class Main
     public static void main(String [] args)
     {
         try{
-        SoundLine s = new SoundLine("chimer", 1.0f);
+        //SoundLine s = new SoundLine("chimer", 1.0f);
         
         }catch(Exception e){}
         

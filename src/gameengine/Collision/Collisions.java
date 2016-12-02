@@ -2,19 +2,21 @@ package gameengine.Collision;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.lang.Math;
 
 public class Collisions {
-    private static float[][] aLast;
-    private static float[][] bLast;
+    private static Point[] ps = new Point[32];
     
     public static void draw(Graphics g){
         g.setColor(Color.BLUE);
-        if( aLast != null )
-            for( int i = 0 ; i < 4 ; i++ )
-            {
-                g.drawOval(50+(int)aLast[i][0]-5/2, 50+ (int)aLast[i][1]-5/2, 5, 5);
+        if(ps != null){
+            for(int i = 0 ; i < ps.length ; i++ ){
+                g.fillOval(ps[i].x-5/2, ps[i].y-5/2, 5, 5);
+                if(i>15) System.out.print("--");
+                System.out.println("( " + ps[i].x +" , " +  ps[i].y + " )");
             }
+        }
     }
     //class used to determine collisions between rotated rectangles and circles.
     //class uses the mask class, which contains circle and rectangles class instances
@@ -58,8 +60,10 @@ public class Collisions {
         System.arraycopy(b.getVectors(), 0, vectors, 2, 2);
         
         float[][] aCorners = a.getCorners();
-        float[][] bCorners = a.getCorners();
+        float[][] bCorners = b.getCorners();
         
+        ps = new Point[32];
+        int cc = 0;
         for( int currentAxis = 0 ; currentAxis < 4 ; currentAxis++ )
         {
         
@@ -73,13 +77,18 @@ public class Collisions {
                 aProjections[i][0] = proj[0];
                 aProjections[i][1] = proj[1];
                 
-                aLast = aProjections.clone();
-                
-                proj = vectorProj(bCorners[i][0], bCorners[i][1] , vectors[currentAxis][0], vectors[currentAxis][1]);
+                ps[cc] = new Point((int)proj[0], (int)proj[1]);
+                cc++;
+            }
+            
+            for( int i = 0 ; i < 4 ; i++ )
+            {
+                float[] proj = vectorProj(bCorners[i][0], bCorners[i][1] , vectors[currentAxis][0], vectors[currentAxis][1]);
                 bProjections[i][0] = proj[0];
                 bProjections[i][1] = proj[1];
                 
-                bLast = bProjections.clone();
+                ps[cc] = new Point((int)proj[0], (int)proj[1]);
+                cc++;
             }
             
             float aMin, aMax, bMin, bMax;
@@ -98,16 +107,18 @@ public class Collisions {
                 else if(bCurrent > bMax)    bMax = bCurrent;
             }
             
-            if(!(bMin <= aMax || bMax >= aMin)) return false;
+            if(aMax <= bMin || bMax <= aMin) return false;
         }
         return true;
     }
     
-    private static float[] vectorProj(float cornerX, float cornerY, float axisX, float axisY)
+    public static float[] vectorProj(float cornerX, float cornerY, float axisX, float axisY)
     {
         float[] projection = new float[2];
-        projection[0] = ((cornerX*axisX) + (cornerY*axisY))/((axisX*axisX)+(axisY*axisY)*axisX);
-        projection[1] = ((cornerX*axisX) + (cornerY*axisY))/((axisX*axisX)+(axisY*axisY)*axisY);
+        projection[0] = ( ( (cornerX*axisX) + (cornerY*axisY) )/( (axisX*axisX)+(axisY*axisY)))*axisX;
+        projection[1] = ( ( (cornerX*axisX) + (cornerY*axisY) )/( (axisX*axisX)+(axisY*axisY)))*axisY;
+        //System.out.println("--------------- Cx: " + cornerX + " Cy: " + cornerY + " Ax: " + axisX + " Ay: " + axisY);
+        //System.out.println("---------------( " + projection[0] +" , " +  projection[1] + " )");
         return projection;
     }
     

@@ -40,7 +40,7 @@ public class Ball extends GameObject implements GameObjectInterface{
     
     Color colColor = Color.BLACK;
 
-    private int w = 200, h = 400;
+    private int w = 50, h = 100;
     
     public Ball(){
         this(0,0);
@@ -56,8 +56,8 @@ public class Ball extends GameObject implements GameObjectInterface{
         height = 32;
         sprite = idleAnimation;
         sprite.start();
-        r = new Rectangle(0, w, h, 50, 50);
-        r2 = new Rectangle(3.14f/4f, w, h, 50, 50);
+        r = new Rectangle(13, w, h, 50, 50);
+        r2 = new Rectangle(21, w, h, 500, 500);
     }
     
     @Override
@@ -147,6 +147,6 @@ public class Ball extends GameObject implements GameObjectInterface{
         drawText(g, "("+x+","+y+")", (int)x, (int)y);
         r.draw(g, colColor);
         r2.draw(g, colColor);
-        Collisions.draw(g);
+        //Collisions.draw(g);
     }
 }
