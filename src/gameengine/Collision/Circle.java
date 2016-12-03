@@ -1,5 +1,6 @@
 package gameengine.Collision;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class Circle implements Shape{
@@ -15,7 +16,8 @@ public class Circle implements Shape{
         this.y = y;
     }
     
-    public void draw(Graphics g){
-        g.drawOval((int)(x - radius), (int)(y - radius), (int)(radius*2), (int)(radius*2));
+    public void draw(Graphics g, Color c){
+        g.setColor(c);
+        g.fillOval((int)(x - radius), (int)(y - radius), (int)(radius*2), (int)(radius*2));
     }
 }

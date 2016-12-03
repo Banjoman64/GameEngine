@@ -37,6 +37,7 @@ public class Ball extends GameObject implements GameObjectInterface{
     
     private Rectangle r;
     private Rectangle r2;
+    private Circle c1;
     
     Color colColor = Color.BLACK;
 
@@ -58,6 +59,7 @@ public class Ball extends GameObject implements GameObjectInterface{
         sprite.start();
         r = new Rectangle(13, w, h, 50, 50);
         r2 = new Rectangle(21, w, h, 500, 500);
+        c1 = new Circle(50, 750, 250);
     }
     
     @Override
@@ -66,6 +68,7 @@ public class Ball extends GameObject implements GameObjectInterface{
         r2.setLocation(GameObject.mouse.mouse_x(), GameObject.mouse.mouse_y());
         
         if(Collisions.collision(r, r2)) colColor = Color.RED;
+        else if(Collisions.collision(r2, c1)) colColor = Color.RED;
         else                            colColor = Color.BLACK;
         
         key_right = GameObject.keyboard.keyDown(KeyEvent.VK_RIGHT);
@@ -147,6 +150,7 @@ public class Ball extends GameObject implements GameObjectInterface{
         drawText(g, "("+x+","+y+")", (int)x, (int)y);
         r.draw(g, colColor);
         r2.draw(g, colColor);
+        c1.draw(g, colColor);
         //Collisions.draw(g);
     }
 }

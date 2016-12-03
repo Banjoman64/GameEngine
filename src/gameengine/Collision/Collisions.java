@@ -125,8 +125,48 @@ public class Collisions {
     //circle and rectangle collision
     public static boolean collision(Circle a, Rectangle b)
     {
-        System.out.println("circle rectangle collision");
-        return true;
+        //Circle
+        float radius = a.radius;
+        float a_x = a.x;
+        float a_y = a.y;
+        
+        //Rectangle
+        float angle = b.angle;
+        int width = b.width;
+        int height = b.height;
+        float b_x = b.x;
+        float b_y = b.y;
+        
+        float d = distance(a_x, a_y, b_x, b_y);
+        float abAngle = angle(b_x, b_y, a_x, a_y);
+        
+        //a_x = a_x + d * (float) Math.cos(abAngle-angle);
+        //a_y = a_y + d * (float) Math.sin(abAngle-angle);
+        
+        //Math.cos(rect.angle) * (circle.x - rect.centerX) - Math.sin(rect.angle) * (circle.y - rect.centerY) + rect.centerX;
+        float a_x2 = (float) (Math.cos(angle) * (a_x - b_x) - Math.sin(angle) * (a_y - b_y) + b_x);
+        float a_y2 = (float) (Math.sin(angle) * (a_x - b_x) + Math.cos(angle) * (a_y - b_y) + b_y);
+        float xClosest, yClosest;
+        
+        if(a_x2 < ( b_x - (width/2) ))
+            xClosest = b_x - (width/2);
+        else if(a_x2 > ( b_x + (width/2) ))
+            xClosest =  b_x + (width/2);
+        else
+            xClosest = a_x2;
+        
+        if(a_y2 < ( b_y - (height/2) ))
+            yClosest = b_y - (height/2);
+        else if(a_y2 > ( b_y + (height/2) ))
+            yClosest =  b_y + (height/2);
+        else
+            yClosest = a_y2;
+        
+        System.out.println("( " + a_x2 +" , " +  a_y2 + " )");
+        
+        if(distance(a_x2, a_y2, xClosest, yClosest) < radius)
+            return true;
+        return false;
     }
     
     public static boolean collision(Rectangle a, Circle b)
@@ -146,6 +186,13 @@ public class Collisions {
         double c = Math.sqrt((a*a)+(b*b));
         
         return (float) c;
+    }
+    
+    public static float angle(float x1, float y1, float x2, float y2){
+        float a = x2-x1;
+        float b = y2-y1;
+        
+        return (float) Math.atan(a/b);
     }
     
 }
