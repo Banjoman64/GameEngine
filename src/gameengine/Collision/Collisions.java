@@ -9,17 +9,23 @@ public class Collisions {
     private static Point[] ps = new Point[32];
     
     public static void draw(Graphics g){
-        g.setColor(Color.BLUE);
-        if(ps != null){
-            for(int i = 0 ; i < ps.length ; i++ ){
-                g.fillOval(ps[i].x-5/2, ps[i].y-5/2, 5, 5);
-                if(i>15) System.out.print("--");
-                System.out.println("( " + ps[i].x +" , " +  ps[i].y + " )");
-            }
-        }
+
     }
     //class used to determine collisions between rotated rectangles and circles.
     //class uses the mask class, which contains circle and rectangles class instances
+    
+    //collisions between 2 groups of shapes or masks
+    //this will almost always be whats called by the
+    //programmer
+    public static boolean collision(Mask a, Mask b){
+        
+        for(int i = 0 ; i < a.mask.size() ; i++){
+            for(int j = 0 ; j < b.mask.size() ; j++){
+                if(collision(a.mask.get(i), b.mask.get(j))) return true;
+            }
+        }
+        return false;
+    }
     
     //general case
     public static boolean collision(Shape a, Shape b)
@@ -76,9 +82,6 @@ public class Collisions {
                 float[] proj = vectorProj(aCorners[i][0], aCorners[i][1], vectors[currentAxis][0], vectors[currentAxis][1]);
                 aProjections[i][0] = proj[0];
                 aProjections[i][1] = proj[1];
-                
-                ps[cc] = new Point((int)proj[0], (int)proj[1]);
-                cc++;
             }
             
             for( int i = 0 ; i < 4 ; i++ )
@@ -86,9 +89,6 @@ public class Collisions {
                 float[] proj = vectorProj(bCorners[i][0], bCorners[i][1] , vectors[currentAxis][0], vectors[currentAxis][1]);
                 bProjections[i][0] = proj[0];
                 bProjections[i][1] = proj[1];
-                
-                ps[cc] = new Point((int)proj[0], (int)proj[1]);
-                cc++;
             }
             
             float aMin, aMax, bMin, bMax;
@@ -117,8 +117,7 @@ public class Collisions {
         float[] projection = new float[2];
         projection[0] = ( ( (cornerX*axisX) + (cornerY*axisY) )/( (axisX*axisX)+(axisY*axisY)))*axisX;
         projection[1] = ( ( (cornerX*axisX) + (cornerY*axisY) )/( (axisX*axisX)+(axisY*axisY)))*axisY;
-        //System.out.println("--------------- Cx: " + cornerX + " Cy: " + cornerY + " Ax: " + axisX + " Ay: " + axisY);
-        //System.out.println("---------------( " + projection[0] +" , " +  projection[1] + " )");
+
         return projection;
     }
     
@@ -137,15 +136,10 @@ public class Collisions {
         float b_x = b.x;
         float b_y = b.y;
         
-        float d = distance(a_x, a_y, b_x, b_y);
-        float abAngle = angle(b_x, b_y, a_x, a_y);
-        
-        //a_x = a_x + d * (float) Math.cos(abAngle-angle);
-        //a_y = a_y + d * (float) Math.sin(abAngle-angle);
-        
         //Math.cos(rect.angle) * (circle.x - rect.centerX) - Math.sin(rect.angle) * (circle.y - rect.centerY) + rect.centerX;
         float a_x2 = (float) (Math.cos(angle) * (a_x - b_x) - Math.sin(angle) * (a_y - b_y) + b_x);
         float a_y2 = (float) (Math.sin(angle) * (a_x - b_x) + Math.cos(angle) * (a_y - b_y) + b_y);
+        
         float xClosest, yClosest;
         
         if(a_x2 < ( b_x - (width/2) ))
@@ -161,8 +155,6 @@ public class Collisions {
             yClosest =  b_y + (height/2);
         else
             yClosest = a_y2;
-        
-        System.out.println("( " + a_x2 +" , " +  a_y2 + " )");
         
         if(distance(a_x2, a_y2, xClosest, yClosest) < radius)
             return true;

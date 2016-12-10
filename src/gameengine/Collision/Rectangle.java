@@ -53,8 +53,8 @@ public class Rectangle implements Shape{
         corners = new float[4][2];
         for( int i = 0 ; i < 4 ; i++ )
         {
-            corners[i][0] = x + (float)(distance*Math.cos(angle+startAngle[i]));
-            corners[i][1] = y + (float)(distance*Math.sin(angle+startAngle[i]));
+            corners[i][0] = x + (float)(distance*Math.cos(-angle+startAngle[i]));
+            corners[i][1] = y + (float)(distance*Math.sin(-angle+startAngle[i]));
         }
         
         vectors = new float[2][2];
@@ -65,6 +65,7 @@ public class Rectangle implements Shape{
            vectors[1][1] = corners[1][1] - corners[2][1];
         
     }
+    
     
     public void setAngle(float a)
     {
@@ -85,15 +86,28 @@ public class Rectangle implements Shape{
     }
     
     public void setLocation(float x, float y)
-    {
-        if(this.x == x && this.y == y)
+    {   
+        setX(x);
+        setY(y);
+    }
+    public void setX(float x) {
+        if(this.x != x)
         {
-            return;
+            float dx = x - this.x;
+            this.x = x;
+            for(int i = 0 ; i < corners.length ; i++)
+                corners[i][0] += dx;
         }
-        
-        this.x = x;
-        this.y = y;
-        updateCorners();
+    }
+
+    public void setY(float y) {
+        if(this.y != y)
+        {
+            float dy = y - this.y;
+            this.y = y;
+            for(int i = 0 ; i < corners.length ; i++)
+                corners[i][1] += dy;
+        }
     }
     
     public float[][] getVectors()
@@ -106,9 +120,8 @@ public class Rectangle implements Shape{
         return corners;
     }
     
-    public void draw(Graphics g, Color rectColor)
+    public void draw(Graphics g)
     {   
-        g.setColor(rectColor);
         Polygon rectangle = new Polygon();
         for( int i = 0 ; i < 4 ; i++ )
         {
@@ -123,19 +136,20 @@ public class Rectangle implements Shape{
         }
         g.setColor(Color.RED);
         g.drawLine((int)x, (int)y, (int)(x+vectors[0][0]), (int)(y+vectors[0][1]));
-        //g.drawLine(250, 250, (int)(250+vectors[0][0]), (int)(250+vectors[0][1]));
+
         g.setColor(Color.BLUE);
         g.drawLine((int)x, (int)y, (int)(x+vectors[1][0]), (int)(y+vectors[1][1]));
-        //g.drawLine(250, 250, (int)(250+vectors[1][0]), (int)(250+vectors[1][1]));
-        
-        /*g.setColor(Color.GREEN);
-        for( int i = 0 ; i < 2 ; i++ ){
-            if(i==1)g.setColor(Color.ORANGE);
-            for( int j = 0 ; j < 4 ; j++ ){
-                float[] proj = vectorProj(corners[j][0], corners[j][1], vectors[i][0], vectors[i][1]);
-                g.fillOval((int)(proj[0])-5/2, (int)(proj[1])-5/2, 5, 5);
-            }
-        }*/
+    } 
+
+    public float getX() {
+        return x;
     }
-    
+
+    public float getY() {
+        return y;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
 }
