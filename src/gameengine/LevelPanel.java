@@ -114,7 +114,6 @@ class LevelPanel extends JPanel{
     private void drawGUI(Graphics g){
         g.setColor(Color.BLACK);
         drawGridLines(g);
-        g.drawLine((int)(0-offset.x/xZoom), (int)(-1000-offset.y/yZoom), (int)(0-offset.x/xZoom), (int)(1000-offset.y/yZoom));
         
         if(selecting){
             g.drawRect(leftClickLeftX-(int)offset.getX(), leftClickLeftY-(int)offset.getY(), mouse.mouse_x() - leftClickLeftX, mouse.mouse_y() - leftClickLeftY);

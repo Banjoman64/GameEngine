@@ -55,7 +55,7 @@ public class GameEngine extends JFrame{
         
         
         loadLevel(new String("newLevel.txt"));
-        
+        objectList.add(new CollisionTest(0,0));
         displayGame();
         
         

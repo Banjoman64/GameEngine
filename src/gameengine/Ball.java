@@ -35,14 +35,6 @@ public class Ball extends GameObject implements GameObjectInterface{
     private boolean key_right = false;
     private boolean key_space = false;
     
-    private Rectangle r;
-    private Rectangle r2;
-    private Circle c1;
-    
-    Color colColor = Color.BLACK;
-
-    private int w = 50, h = 100;
-    
     public Ball(){
         this(0,0);
     }
@@ -57,21 +49,11 @@ public class Ball extends GameObject implements GameObjectInterface{
         height = 32;
         sprite = idleAnimation;
         sprite.start();
-        r = new Rectangle(13, w, h, 50, 50);
-        r2 = new Rectangle((float) (Math.PI/3), w, h, 500, 500);
-        c1 = new Circle(50, 750, 250);
+
     }
     
     @Override
     public void step() {
-        r.setLocation((float)x, (float)y);
-        r.setAngle(r.angle+.1f);
-        r2.setLocation(GameObject.mouse.mouse_x(), GameObject.mouse.mouse_y());
-        r2.setAngle(r.angle+.1f);
-        
-        if(Collisions.collision(r, r2)) x+=1;
-        else if(Collisions.collision(r2, c1)) x+=1;
-        
         key_right = GameObject.keyboard.keyDown(KeyEvent.VK_RIGHT);
         key_left = GameObject.keyboard.keyDown(KeyEvent.VK_LEFT);
         key_space = GameObject.keyboard.keyDown(KeyEvent.VK_SPACE);
@@ -147,11 +129,5 @@ public class Ball extends GameObject implements GameObjectInterface{
     @Override
     public void draw(Graphics g) {
         drawSprite(g, sprite.getSprite(), (int)x, (int)y);
-        g.setColor(Color.black);
-        drawText(g, "("+x+","+y+")", (int)x, (int)y);
-        r.draw(g);
-        r2.draw(g);
-        c1.draw(g);
-        //Collisions.draw(g);
     }
 }

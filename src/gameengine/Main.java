@@ -17,14 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class Main 
 {
     public static void main(String [] args)
-    {
-        try{
-        //SoundLine s = new SoundLine("chimer", 1.0f);
-        
-        }catch(Exception e){}
-        
-        System.out.println(Collisions.collision(new Rectangle(0, 4, 2, 0, 0),new Rectangle(0, 4, 2, 20, 20)));
-        
+    {    
+        //set to true to start the test room, false to start the gui level builder
         if(true)
         {
             new GameEngine();
