@@ -1,5 +1,6 @@
 package gameengine.Collision;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -51,5 +52,9 @@ public class Mask implements Iterable{
 
     public Iterator iterator() {
         return mask.iterator();
+    }
+    
+    public void draw(Graphics g){
+        for(Shape s: mask) s.draw(g);
     }
 }
