@@ -18,7 +18,9 @@ import java.awt.image.BufferedImage;
  */
 public class CollisionTest extends GameObject implements GameObjectInterface{
 
-    private Rectangle r;
+    
+    private Mask m1, m2;
+    private Rectangle r1;
     private Rectangle r2;
     private Circle c1;
     private boolean collision;
@@ -38,19 +40,40 @@ public class CollisionTest extends GameObject implements GameObjectInterface{
         this.y = y;
         width = 32;
         height = 32;
-        r = new Rectangle(13, w, h, 50, 50);
+        r1 = new Rectangle(13, w, h, 50, 50);
         r2 = new Rectangle((float) (Math.PI/3), w, h, 500, 500);
         c1 = new Circle(50, 750, 250);
+        m1 = new Mask(null, -16, -16);
+        m1.add(new Rectangle(0, 32, 32));
+        
+        m2 = new Mask();
+        m2.add(new Circle(30, 30, 30));
     }
     
     @Override
     public void step() {
-        r.setLocation(150f, 150f);
-        r.setAngle(r.angle+.1f);
-        r2.setLocation(GameObject.mouse.mouse_x(), GameObject.mouse.mouse_y());
-        r2.setAngle(r.angle+.1f);
+        boolean l, r, u, d, s, a;
+        l = GameObject.keyboard.keyDown(KeyEvent.VK_LEFT);
+        r = GameObject.keyboard.keyDown(KeyEvent.VK_RIGHT);
+        u = GameObject.keyboard.keyDown(KeyEvent.VK_UP);
+        d = GameObject.keyboard.keyDown(KeyEvent.VK_DOWN);
+        s = GameObject.keyboard.keyDown(KeyEvent.VK_SPACE);
+        a = GameObject.keyboard.keyDown(KeyEvent.VK_ALT);
         
-        if(Collisions.collision(r, r2)) collision = true;
+        r1.setLocation(150f, 150f);
+        r1.setAngle(r1.angle+.1f);
+        m1.setLocation(GameObject.mouse.mouse_x(), GameObject.mouse.mouse_y());
+        r2.setAngle(r1.angle+.1f);
+        
+        if(l) m2.setLocation(m2.x - 2, m2.y);
+        if(r) m2.setLocation(m2.x + 2, m2.y);
+        if(u) m2.setLocation(m2.x, m2.y - 2);
+        if(d) m2.setLocation(m2.x, m2.y + 2);
+        
+        if(s) m1.setOffsetX(m1.offsetx+2);
+        if(a) m1.setAngle(m1.angle+.02f);
+        
+        if(Collisions.collision(m1, m2)) collision = true;
         else if(Collisions.collision(r2, c1)) collision = true;
         else collision = false;
         
@@ -60,9 +83,11 @@ public class CollisionTest extends GameObject implements GameObjectInterface{
     public void draw(Graphics g) {
 
         g.setColor(Color.black);
-        r.draw(g);
+        r1.draw(g);
         r2.draw(g);
         c1.draw(g);
+        m1.draw(g);
+        m2.draw(g);
         drawText(g, (collision) ? "There is a collision" : "There is NOT a collision", 20,20);
     }
 }

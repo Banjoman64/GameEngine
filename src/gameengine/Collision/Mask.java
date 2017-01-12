@@ -3,22 +3,44 @@ package gameengine.Collision;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.awt.Color;
 
 public class Mask implements Iterable{
     public ArrayList<Shape> mask;
-    public float x, y, angle;
+    public ArrayList<Point> positions;
+    public float x, y, angle, offsetx, offsety;
     
     public Mask(){
-        this(null);
+        this(null, 0, 0);
+        
     }
     
-    public Mask(ArrayList<Shape> a){
-        mask = new ArrayList<Shape>(a);
+    public Mask(ArrayList<Shape> a)
+    {
+        this(a, 0, 0);
+    }
+    
+    public Mask(ArrayList<Shape> a, float offsetx, float offsety)
+    {
+        positions = new ArrayList<Point>();
+        if(a!=null)
+        {
+            mask = new ArrayList<Shape>(a);
+            for(Shape s: mask)
+            {
+                positions.add(new Point(s.getX() - x, s.getY() - y));
+            }
+        }else
+        {
+            mask = new ArrayList<Shape>();
+        }
         x = y = angle = 0;
+        setOffset(offsetx, offsety);
     }
     
-    public void add(Shape a){
-        mask.add(a);
+    public void add(Shape s){
+        mask.add(s);
+        positions.add(new Point(s.getX() - x, s.getY() - y));
     }
     
     public Shape get(int i){
@@ -26,19 +48,23 @@ public class Mask implements Iterable{
     }
     
     public void setX(float x){
-        float dx = x - this.x;
-        
         this.x = x;
         
-        for(Shape s : mask)  s.setX(s.getX() + dx);
+        int c = 0;
+        for(Shape s : mask)
+            s.setX(x - offsetx + positions.get(c++).getX());
+        
+        setAngle(angle);
     }
     
     public void setY(float y){
-        float dy = y - this.y;
-        
         this.y = y;
         
-        for(Shape s : mask)  s.setY(s.getY() + dy);
+        int c = 0;
+        for(Shape s : mask)
+            s.setY(y - offsety + positions.get(c++).getY());
+        
+        setAngle(angle);
     }
     
     public void setLocation(float x, float y){
@@ -47,14 +73,70 @@ public class Mask implements Iterable{
     }
     
     public void setAngle(float angle){
+        float da = angle - this.angle;
+        this.angle = angle;
+
+        int c = 0;
+        for(Shape s : mask){
+            s.setAngle(s.getAngle() - da);
+            //a_x2 = (float) (Math.cos(angle) * (a_x - b_x) - Math.sin(angle) * (a_y - b_y) + b_x);
+            s.setX((float)(Math.cos(angle) * (positions.get(c).getX()-offsetx) - Math.sin(angle) * (positions.get(c).getY()-offsety) + x));
+            //(Math.sin(angle) * (a_x - b_x) + Math.cos(angle) * (a_y - b_y) + b_y);
+            s.setY((float)(Math.sin(angle) * (positions.get(c).getX()-offsetx) + Math.cos(angle) * (positions.get(c).getY()-offsety) + y));
+            c++;
+        }
         
     }
+    
+    public void setOffsetX(float offsetx){
 
+        this.offsetx = offsetx;
+
+    }
+    
+    public void setOffsetY(float offsety){
+        this.offsety = offsety;
+    }
+    
+    public void setOffset(float offsetx, float offsety){
+        setOffsetX(offsetx);
+        setOffsetY(offsety);
+    }
+    
     public Iterator iterator() {
         return mask.iterator();
     }
     
     public void draw(Graphics g){
         for(Shape s: mask) s.draw(g);
+        
+        g.setColor(Color.WHITE);
+        
+        g.drawLine((int) x, (int) y-10, (int) x, (int) y+10);
+        g.drawLine((int) x-10, (int) y, (int) x+10, (int) y);
+        
+        g.drawLine((int)( x - offsetx), (int)( y - offsety-10 ), (int)( x - offsetx), (int)( y - offsety+10 ));
+        g.drawLine((int)( x - offsetx-10 ), (int)( y - offsety), (int)( x - offsetx+10 ), (int)( y - offsety));
     }
+}
+
+class Point{
+    private float x, y;
+    public Point(float x, float y){
+        this.x = x;
+        this.y = y;
+    }
+    float getX(){
+        return x;
+    }
+    float getY(){
+        return y;
+    }
+    void setX(float x){
+        this.x = x;
+    }
+    void setY(float y){
+        this.y = y;
+    }
+    
 }
