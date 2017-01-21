@@ -23,11 +23,16 @@ public class Ball extends GameObject implements GameObjectInterface{
     private Animation idleAnimation = new Animation(idleFrames,4);
     private Animation walkAnimation = new Animation(walkFrames,2);
     private Animation sprite = idleAnimation;
+    public Mask mask;
     private double vsp = 0;
     private double hsp = 0;
     private double gravity = .5;
     private double move_speed = 2;
     private double friction = .5;
+    private float angle = 0;
+    private float offsetx = 0;
+    private float offsety = 0;
+    
     private boolean moving = false;
     private boolean grounded = true;
     
@@ -49,11 +54,27 @@ public class Ball extends GameObject implements GameObjectInterface{
         height = 32;
         sprite = idleAnimation;
         sprite.start();
+        mask = new Mask(null);
+        mask.add(new Rectangle((float) 0,32,32));
+        //mask.setOffset(0, 0);
+        mask.setX(x);
+        mask.setY(y);
 
     }
     
     @Override
     public void step() {
+        if(GameObject.keyboard.keyDown(KeyEvent.VK_R)){
+            angle+=.03;
+            mask.setAngle(angle);
+        }
+        
+        if(GameObject.keyboard.keyDown(KeyEvent.VK_O)){
+            offsetx+=1;
+            offsety+=0;
+            mask.setOffset(offsetx, offsety);
+        }
+        
         key_right = GameObject.keyboard.keyDown(KeyEvent.VK_RIGHT);
         key_left = GameObject.keyboard.keyDown(KeyEvent.VK_LEFT);
         key_space = GameObject.keyboard.keyDown(KeyEvent.VK_SPACE);
@@ -124,10 +145,15 @@ public class Ball extends GameObject implements GameObjectInterface{
         y+=vsp;
         
         sprite.update();
+        mask.setLocation((float)x,(float)y);
     }
 
     @Override
     public void draw(Graphics g) {
-        drawSprite(g, sprite.getSprite(), (int)x, (int)y);
+        mask.draw(g);
+        drawSprite(g, sprite.getSprite(), (int)x, (int)y, (int)offsetx, (int)offsety, angle);
+        
+        g.drawLine((int)x,(int)y-5,(int)x,(int)y+5);
+        g.drawLine((int)x-5,(int)y,(int)x+5,(int)y);
     }
 }

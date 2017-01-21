@@ -139,6 +139,10 @@ public class Rectangle implements Shape{
 
         g.setColor(Color.BLUE);
         g.drawLine((int)x, (int)y, (int)(x+vectors[1][0]), (int)(y+vectors[1][1]));
+        
+        g.setColor(Color.red);
+        g.drawLine((int)x,(int)y-5,(int)x,(int)y+5);
+        g.drawLine((int)x-5,(int)y,(int)x+5,(int)y);
     } 
 
     public float getX() {

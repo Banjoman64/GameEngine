@@ -6,7 +6,11 @@
 package gameengine;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -102,9 +106,42 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
         this.height = height;
     }
     
-    public void drawSprite(Graphics g, BufferedImage sprite, int x, int y)
+    public void drawSprite(Graphics g, BufferedImage sprite, int x, int y, int offsetx, int offsety, float angle)
     {
-        g.drawImage(sprite, (int)(x-offset.x/xZoom), (int)(y-offset.y/yZoom), null);
+        angle = -angle;
+        Image img = (Image) sprite;
+        double sin = Math.abs(Math.sin(angle)),
+               cos = Math.abs(Math.cos(angle));
+        
+        int w = img.getWidth(null), h = img.getHeight(null);
+        
+        int neww = (int) Math.floor(w*cos + h*sin),
+            newh = (int) Math.floor(h*cos + w*sin);
+        
+        BufferedImage bimg = new BufferedImage(neww, newh, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = bimg.createGraphics();
+        
+        g2.translate((neww-w)/2, (newh-h)/2);
+        g2.rotate(angle, w/2, h/2);
+        g2.drawRenderedImage((BufferedImage)img, null);
+        g2.dispose();
+        
+        float drawLocationX = (float)(Math.cos(angle) * (-offsetx) - Math.sin(angle) * (-offsety) + x);
+        float drawLocationY = (float)(Math.sin(angle) * (-offsetx) + Math.cos(angle) * (-offsety) + y);
+        
+        g.drawImage(bimg, (int)(drawLocationX -(neww/2) - offset.x/xZoom), (int)(drawLocationY - (newh/2) - offset.y/yZoom), null);
+        //////////////////////////
+        /*float drawLocationX = (float)(Math.cos(angle) * (x-offsetx) - Math.sin(angle) * (y-offsety) + x);
+            //(Math.sin(angle) * (a_x - b_x) + Math.cos(angle) * (a_y - b_y) + b_y);
+        float drawLocationY = (float)(Math.sin(angle) * (x-offsetx) + Math.cos(angle) * (y-offsety) + y);
+        Image image;
+        AffineTransform identity = new AffineTransform();
+        
+        Graphics2D g2d = (Graphics2D) g;
+        AffineTransform trans = new AffineTransform();
+        trans.setTransform(identity);
+        trans.rotate((double)angle);
+        g2d.drawImage(image, trans, this);//(int)(drawLocationX-offset.x/xZoom), (int)(drawLocationY-offset.y/yZoom));*/
     }
     
     public void drawText(Graphics g, String s, int x, int y)
@@ -145,6 +182,8 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
             return o;
         return null;
     }
+    
+    
     
     //CollisionPointList*********************************************************************
     public static List<GameObject> collisionPointList(String s, int x, int y){

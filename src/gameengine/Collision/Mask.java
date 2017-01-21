@@ -8,7 +8,7 @@ import java.awt.Color;
 public class Mask implements Iterable{
     public ArrayList<Shape> mask;
     public ArrayList<Point> positions;
-    public float x, y, angle, offsetx, offsety;
+    private float x, y, angle, offsetx, offsety;
     
     public Mask(){
         this(null, 0, 0);
@@ -57,6 +57,10 @@ public class Mask implements Iterable{
         setAngle(angle);
     }
     
+    public float getX(){
+        return x;
+    }
+    
     public void setY(float y){
         this.y = y;
         
@@ -67,12 +71,18 @@ public class Mask implements Iterable{
         setAngle(angle);
     }
     
+    public float getY(){
+        return y;
+    }
+    
     public void setLocation(float x, float y){
         setX(x);
         setY(y);
     }
     
     public void setAngle(float angle){
+        angle = -angle;
+        
         float da = angle - this.angle;
         this.angle = angle;
 
@@ -88,14 +98,26 @@ public class Mask implements Iterable{
         
     }
     
+    public float getAngle(){
+        return angle;
+    }
+    
     public void setOffsetX(float offsetx){
 
         this.offsetx = offsetx;
 
     }
     
+    public float getOffsetx(){
+        return offsetx;
+    }
+    
     public void setOffsetY(float offsety){
         this.offsety = offsety;
+    }
+    
+    public float getOffsety(){
+        return y;
     }
     
     public void setOffset(float offsetx, float offsety){

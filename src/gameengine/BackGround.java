@@ -26,6 +26,6 @@ public class BackGround extends GameObject implements GameObjectInterface{
 
     @Override
     public void draw(Graphics g) {
-        drawSprite(g, Sprite.getSprite(3, 0), (int)x, (int)y);
+        drawSprite(g, Sprite.getSprite(3, 0), (int)x, (int)y, 0, 0, (float) Math.toRadians(45));
     }
 }

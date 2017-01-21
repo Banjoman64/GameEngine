@@ -36,7 +36,7 @@ public class Wall extends GameObject implements GameObjectInterface{
     
     @Override
     public void draw(Graphics g) {
-        drawSprite(g, sprite, (int)(x), (int)(y));
+        drawSprite(g, sprite, (int)(x), (int)(y), 0, 0, 0);
         g.setColor(Color.WHITE);
         drawText(g, Integer.toString(this.id), (int)(x), (int)(y));
     }

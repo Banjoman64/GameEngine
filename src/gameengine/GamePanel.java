@@ -40,6 +40,7 @@ public class GamePanel extends JPanel{
         addMouseMotionListener(mouse);
         
         GameObject.setInput(keyboard, mouse);
+        GameObject.setZoom(.5, .5);
         initializeViews();
     }
     
@@ -88,6 +89,8 @@ public class GamePanel extends JPanel{
             v.setW(getWidth());
             v.setH(getHeight()/2);
             v.draw(g, this);
+            v.setXScale(2f);
+            v.setYScale(2f);
         }
         
         //new View(0, 0, getWidth(), getHeight()/2, this).draw(g, this);

@@ -48,6 +48,8 @@ public class View {
         
         clearDisplay(graphics);
         
+        
+        
         GameObject.setOffset(new Point(roomX, roomY));
         GameObject.setZoom(xScale, yScale);
         drawGameObjects(graphics);
@@ -103,12 +105,12 @@ public class View {
         this.h = h;
     }
     
-    public void setXScale(int x)
+    public void setXScale(float x)
     {
         this.xScale = x;
     }
     
-    public void setYScale(int y)
+    public void setYScale(float y)
     {
         this.yScale = y;
     }

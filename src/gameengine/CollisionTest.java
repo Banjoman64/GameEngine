@@ -65,13 +65,13 @@ public class CollisionTest extends GameObject implements GameObjectInterface{
         m1.setLocation(GameObject.mouse.mouse_x(), GameObject.mouse.mouse_y());
         r2.setAngle(r1.angle+.1f);
         
-        if(l) m2.setLocation(m2.x - 2, m2.y);
-        if(r) m2.setLocation(m2.x + 2, m2.y);
-        if(u) m2.setLocation(m2.x, m2.y - 2);
-        if(d) m2.setLocation(m2.x, m2.y + 2);
+        if(l) m2.setLocation(m2.getX() - 2, m2.getY());
+        if(r) m2.setLocation(m2.getX() + 2, m2.getY());
+        if(u) m2.setLocation(m2.getX(), m2.getY() - 2);
+        if(d) m2.setLocation(m2.getX(), m2.getY() + 2);
         
-        if(s) m1.setOffsetX(m1.offsetx+2);
-        if(a) m1.setAngle(m1.angle+.02f);
+        if(s) m1.setOffsetX(m1.getOffsetx()+2);
+        if(a) m1.setAngle(m1.getAngle()+.02f);
         
         if(Collisions.collision(m1, m2)) collision = true;
         else if(Collisions.collision(r2, c1)) collision = true;
