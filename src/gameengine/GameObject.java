@@ -178,6 +178,7 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     }
 
     public static GameObject collisionPoint(GameObject o, int x , int y){
+        //TO-DO add support for collision point to Mask.java
         if(x < o.getX()+o.getWidth()  &&  x> o.getX()  &&  y < o.getY()+o.getHeight()  &&  y> o.getY())
             return o;
         return null;

@@ -1,6 +1,5 @@
 package gameengine.Collision;
 
-import static gameengine.Collision.Collisions.vectorProj;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;

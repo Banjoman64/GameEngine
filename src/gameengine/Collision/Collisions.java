@@ -1,6 +1,5 @@
 package gameengine.Collision;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.lang.Math;
@@ -165,11 +164,6 @@ public class Collisions {
     {
         return collision(b, a);
     }
-    
-    
-    
-    
-    //
     
     public static float distance(float x1, float y1, float x2, float y2){
         float a = x2-x1;

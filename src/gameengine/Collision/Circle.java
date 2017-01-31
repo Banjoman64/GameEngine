@@ -1,6 +1,5 @@
 package gameengine.Collision;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 public class Circle implements Shape{
