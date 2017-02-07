@@ -142,6 +142,11 @@ public class Rectangle implements Shape{
         g.setColor(Color.red);
         g.drawLine((int)x,(int)y-5,(int)x,(int)y+5);
         g.drawLine((int)x-5,(int)y,(int)x+5,(int)y);
+        
+        g.setColor(Color.BLACK);
+        float[] b = new float[4];
+        b = getBounds();
+        g.drawRect((int)b[2], (int)b[1], (int)(b[0] - b[2]), (int)(b[3] - b[1]));
     } 
 
     public float getX() {
@@ -154,5 +159,27 @@ public class Rectangle implements Shape{
 
     public float getAngle() {
         return angle;
+    }
+    
+    public float[] getBounds(){
+        float[] bounds = new float[4];
+        bounds[0] = corners[0][0];
+        bounds[1] = corners[0][1];
+        bounds[2] = corners[0][0];
+        bounds[3] = corners[0][1];
+        
+        for(int i  = 1 ; i < 4 ; i++){
+            if(corners[i][0] > bounds[0])
+                bounds[0] = corners[i][0];
+            if(corners[i][0] < bounds[2])
+                bounds[2] = corners[i][0];
+            if(corners[i][1] < bounds[1])
+                bounds[1] = corners[i][1];
+            if(corners[i][1] > bounds[3])
+                bounds[3] = corners[i][1];
+        }
+            
+        
+        return bounds;
     }
 }

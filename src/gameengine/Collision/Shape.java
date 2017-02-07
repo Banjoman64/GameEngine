@@ -11,4 +11,5 @@ public interface Shape{
     public float getX();
     public float getY();
     public float getAngle();
+    public float[] getBounds();
 }

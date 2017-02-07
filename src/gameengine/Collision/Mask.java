@@ -43,6 +43,10 @@ public class Mask implements Iterable{
         positions.add(new Point(s.getX() - x, s.getY() - y));
     }
     
+    public void getBounds(){
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
+    
     public Shape get(int i){
         return mask.get(i);
     }
@@ -89,9 +93,7 @@ public class Mask implements Iterable{
         int c = 0;
         for(Shape s : mask){
             s.setAngle(s.getAngle() - da);
-            //a_x2 = (float) (Math.cos(angle) * (a_x - b_x) - Math.sin(angle) * (a_y - b_y) + b_x);
             s.setX((float)(Math.cos(angle) * (positions.get(c).getX()-offsetx) - Math.sin(angle) * (positions.get(c).getY()-offsety) + x));
-            //(Math.sin(angle) * (a_x - b_x) + Math.cos(angle) * (a_y - b_y) + b_y);
             s.setY((float)(Math.sin(angle) * (positions.get(c).getX()-offsetx) + Math.cos(angle) * (positions.get(c).getY()-offsety) + y));
             c++;
         }
