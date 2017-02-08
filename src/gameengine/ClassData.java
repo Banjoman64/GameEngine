@@ -37,6 +37,7 @@ class ClassData{
             label = pieceName;
             
         }catch(Exception e){
+            e.printStackTrace();
             System.out.println("Couldn't find class " + pieceName);
             text = null;
             icon = null;

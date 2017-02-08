@@ -9,10 +9,9 @@ public class Mask implements Iterable{
     public ArrayList<Shape> mask;
     public ArrayList<Point> positions;
     private float x, y, angle, offsetx, offsety;
-    
+    public float[] bounds;
     public Mask(){
         this(null, 0, 0);
-        
     }
     
     public Mask(ArrayList<Shape> a)
@@ -36,15 +35,40 @@ public class Mask implements Iterable{
         }
         x = y = angle = 0;
         setOffset(offsetx, offsety);
+        bounds = new float[4];
+        getBounds();
     }
     
     public void add(Shape s){
         mask.add(s);
         positions.add(new Point(s.getX() - x, s.getY() - y));
+        getBounds();
     }
     
     public void getBounds(){
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        float[] tempBounds;
+        if(mask.isEmpty()){
+            tempBounds = new float[4];
+            tempBounds[0] = tempBounds[2] = x;
+            tempBounds[1] = tempBounds[3] = y;
+            bounds = tempBounds;
+            return;
+        }
+        
+        float[] maxBounds = mask.get(0).getBounds();
+        for(int i = 1 ; i < mask.size() ; i++){
+            tempBounds = mask.get(i).getBounds();
+            if(tempBounds[0] > maxBounds[0])
+                maxBounds[0] = tempBounds[0];
+            if(tempBounds[1] < maxBounds[1])
+                maxBounds[1] = tempBounds[1];
+            if(tempBounds[2] < maxBounds[2])
+                maxBounds[2] = tempBounds[2];
+            if(tempBounds[3] > maxBounds[3])
+                maxBounds[3] = tempBounds[3];
+        }
+        
+        bounds = maxBounds;
     }
     
     public Shape get(int i){
@@ -52,6 +76,7 @@ public class Mask implements Iterable{
     }
     
     public void setX(float x){
+        float dx = x - this.x;
         this.x = x;
         
         int c = 0;
@@ -59,6 +84,8 @@ public class Mask implements Iterable{
             s.setX(x - offsetx + positions.get(c++).getX());
         
         setAngle(angle);
+        bounds[0]+=dx;
+        bounds[2]+=dx;
     }
     
     public float getX(){
@@ -66,6 +93,7 @@ public class Mask implements Iterable{
     }
     
     public void setY(float y){
+        float dy = y - this.y;
         this.y = y;
         
         int c = 0;
@@ -73,6 +101,9 @@ public class Mask implements Iterable{
             s.setY(y - offsety + positions.get(c++).getY());
         
         setAngle(angle);
+        getBounds();
+        bounds[1]+=dy;
+        bounds[3]+=dy;
     }
     
     public float getY(){
@@ -97,7 +128,7 @@ public class Mask implements Iterable{
             s.setY((float)(Math.sin(angle) * (positions.get(c).getX()-offsetx) + Math.cos(angle) * (positions.get(c).getY()-offsety) + y));
             c++;
         }
-        
+        getBounds();
     }
     
     public float getAngle(){
@@ -105,9 +136,8 @@ public class Mask implements Iterable{
     }
     
     public void setOffsetX(float offsetx){
-
         this.offsetx = offsetx;
-
+        getBounds();
     }
     
     public float getOffsetx(){
@@ -116,6 +146,7 @@ public class Mask implements Iterable{
     
     public void setOffsetY(float offsety){
         this.offsety = offsety;
+        getBounds();
     }
     
     public float getOffsety(){
@@ -141,6 +172,10 @@ public class Mask implements Iterable{
         
         g.drawLine((int)( x - offsetx), (int)( y - offsety-10 ), (int)( x - offsetx), (int)( y - offsety+10 ));
         g.drawLine((int)( x - offsetx-10 ), (int)( y - offsety), (int)( x - offsetx+10 ), (int)( y - offsety));
+        
+        g.setColor(Color.WHITE);
+        if(bounds!=null)
+            g.drawRect((int)bounds[2], (int)bounds[1], (int)(bounds[0] - bounds[2]), (int)(bounds[3] - bounds[1]));
     }
 }
 

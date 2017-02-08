@@ -54,6 +54,7 @@ public class Ball extends GameObject implements GameObjectInterface{
         sprite.start();
         mask = new Mask(null);
         mask.add(new Rectangle((float) 0,32,32));
+        mask.add(new Circle(15,37,45));
         //mask.setOffset(0, 0);
         mask.setX(x);
         mask.setY(y);
