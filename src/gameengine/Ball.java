@@ -21,7 +21,6 @@ public class Ball extends GameObject implements GameObjectInterface{
     private Animation idleAnimation = new Animation(idleFrames,4);
     private Animation walkAnimation = new Animation(walkFrames,2);
     private Animation sprite = idleAnimation;
-    public Mask mask;
     private double vsp = 0;
     private double hsp = 0;
     private double gravity = .5;
@@ -52,10 +51,10 @@ public class Ball extends GameObject implements GameObjectInterface{
         height = 32;
         sprite = idleAnimation;
         sprite.start();
-        mask = new Mask(null);
-        mask.add(new Rectangle((float) 0,32,32));
-        mask.add(new Circle(15,37,45));
-        //mask.setOffset(0, 0);
+        tags.add("sweg");
+        mask = new Mask();
+        mask.add(new Rectangle(0f, 32, 32));
+        mask.add(new Circle(16));
         mask.setX(x);
         mask.setY(y);
 
@@ -89,7 +88,7 @@ public class Ball extends GameObject implements GameObjectInterface{
         }
         
         //update grounded
-        if(placeCollisionSquare("solid", x, y+1)!=null){
+        if(placeCollisionMask("solid", x, y+1)!=null){
             grounded = true;
         }else{
             grounded = false;
@@ -116,22 +115,22 @@ public class Ball extends GameObject implements GameObjectInterface{
         }
         
         //Horizontal Collisions
-        if(placeCollisionSquare("solid", x+hsp, y)!=null){
+        if(placeCollisionMask("solid", x+hsp, y)!=null){
             int cc = 0;
-            while(placeCollisionSquare("solid", x+Math.signum(hsp), y)==null){
-                x+=Math.signum(hsp);
+            while(placeCollisionMask("solid", x+Math.signum(hsp), y)==null){
+                setX(x+Math.signum(hsp));
                 cc+=1;
             }
             hsp = 0;
         }
         
-        x+=hsp;
+        setX(x+hsp);
         
         //vertical collisions
-        if(placeCollisionSquare("solid", x, y+vsp)!=null){
+        if(placeCollisionMask("solid", x, y+vsp)!=null){
             int cc = 0;
-            while(placeCollisionSquare("solid", x, y+Math.signum(vsp))==null){
-                y+=Math.signum(vsp);
+            while(placeCollisionMask("solid", x, y+Math.signum(vsp))==null){
+                setY(y+Math.signum(vsp));
                 cc+=1;
             }
             if(vsp>0){
@@ -141,18 +140,19 @@ public class Ball extends GameObject implements GameObjectInterface{
             
         }
         
-        y+=vsp;
+        setY(y+vsp);
         
         sprite.update();
-        mask.setLocation((float)x,(float)y);
+        //mask.setLocation((float)x,(float)y);
     }
 
     @Override
     public void draw(Graphics g) {
-        mask.draw(g);
+        //mask.draw(g);
         drawSprite(g, sprite.getSprite(), (int)x, (int)y, (int)offsetx, (int)offsety, angle);
         
         g.drawLine((int)x,(int)y-5,(int)x,(int)y+5);
         g.drawLine((int)x-5,(int)y,(int)x+5,(int)y);
+        //mask.draw(g);
     }
 }
