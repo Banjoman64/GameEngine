@@ -14,9 +14,23 @@ public class Collisions {
     //class uses the mask class, which contains circle and rectangles class instances
     
     //collisions between 2 groups of shapes or masks
-    //this will almost always be whats called by the
+    //this will almost always be what's called by the
     //programmer
     public static boolean collision(Mask a, Mask b){
+        if(a == null || b == null){
+            return false;
+        }
+        float[] aBounds = a.bounds;
+        float[] bBounds = b.bounds;
+        
+        if(aBounds[0] > bBounds[2] && aBounds[1] < bBounds[3] && aBounds[2] < bBounds[0] && aBounds[3] > bBounds[1]){
+            return collisionDetailed(a, b);
+        }
+        
+        return false;
+    }
+    
+    public static boolean collisionDetailed(Mask a, Mask b){
         
         for(int i = 0 ; i < a.mask.size() ; i++){
             for(int j = 0 ; j < b.mask.size() ; j++){
@@ -46,6 +60,10 @@ public class Collisions {
     //circle circle collision
     public static boolean collision(Circle a, Circle b)
     {
+        if(!collisionBounds(a.getBounds(), b.getBounds())){
+            return false;
+        }
+        
         System.out.println("circle circle collision");
         if( distance(a.x, a.y, b.x, b.y) < (a.radius+b.radius))
             return true;
@@ -55,7 +73,9 @@ public class Collisions {
     //rectangle rectangle collision
     public static boolean collision(Rectangle a, Rectangle b)
     {
-        
+        if(!collisionBounds(a.getBounds(), b.getBounds())){
+            return false;
+        }
         
         float[][] aVectors = a.getVectors();
         float[][] bVectors = b.getVectors();
@@ -123,6 +143,10 @@ public class Collisions {
     //circle and rectangle collision
     public static boolean collision(Circle a, Rectangle b)
     {
+        if(!collisionBounds(a.getBounds(), b.getBounds())){
+            return false;
+        }
+        
         //Circle
         float radius = a.radius;
         float a_x = a.x;
@@ -165,6 +189,82 @@ public class Collisions {
         return collision(b, a);
     }
     
+    //point mask collisions
+    public static boolean collision(int x, int y, Mask a){
+        if(a == null){
+            return false;
+        }
+        
+        float[] aBounds = a.bounds;
+        if(aBounds[0] > x && aBounds[1] < y && aBounds[2] < x && aBounds[3] > y){
+            return collisionDetailed(x, y, a);
+        }
+        return false;
+    }
+    
+    public static boolean collisionDetailed(int x, int y, Mask a){
+        
+        for(int i = 0 ; i < a.mask.size() ; i++){
+            if(collision(x, y, a.mask.get(i))) return true;
+        }
+        return false;
+    }
+    
+    public static boolean collision(int x, int y, Shape a)
+    {
+        if(a.getClass() == Circle.class)
+        {
+            return collision(x, y, (Circle) a );
+        }
+        else
+        {
+            return collision(x, y, (Rectangle) a);
+        }
+    }
+    
+    public static boolean collision(int x, int y, Rectangle a){
+        if(!collisionBounds(x, y, a.getBounds())){
+            return false;
+        }
+        
+        //Rectangle
+        float angle = a.angle;
+        int width = a.width;
+        int height = a.height;
+        float a_x = a.x;
+        float a_y = a.y;
+        
+        //Math.cos(rect.angle) * (circle.x - rect.centerX) - Math.sin(rect.angle) * (circle.y - rect.centerY) + rect.centerX;
+        float x2 = (float) (Math.cos(angle) * (x - a_x) - Math.sin(angle) * (y - a_y) + a_x);
+        float y2 = (float) (Math.sin(angle) * (x - a_x) + Math.cos(angle) * (y - a_y) + a_y);
+        
+        if(x2 > ( a_x - (width/2) ) && x2 < ( a_x + (width/2) ) && y2 > ( a_y - (height/2) ) && y2 < ( a_y + (height/2) ))
+            return true;
+        return false;
+    }
+    
+    public static boolean collision(int x, int y, Circle a){
+        if(!collisionBounds(x, y, a.getBounds())){
+            return false;
+        }
+        if(distance(x, y, a.x, a.y) < a.radius){
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean collisionBounds(float[] a, float[] b){
+        if(a[0] > b[2] && a[1] < b[3] && a[2] < b[0] && a[3] > b[1])
+            return true;
+        return false;
+    }
+    
+    public static boolean collisionBounds(int x, int y, float[] a){
+        if(a[0] > x && a[1] < y && a[2] < x && a[3] > y)
+            return true;
+        return false;
+    }
+    
     public static float distance(float x1, float y1, float x2, float y2){
         float a = x2-x1;
         float b = y2-y1;
@@ -180,5 +280,4 @@ public class Collisions {
         
         return (float) Math.atan(a/b);
     }
-    
 }

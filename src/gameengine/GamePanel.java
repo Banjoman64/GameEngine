@@ -40,16 +40,16 @@ public class GamePanel extends JPanel{
         addMouseMotionListener(mouse);
         
         GameObject.setInput(keyboard, mouse);
-        GameObject.setZoom(.5, .5);
+        //GameObject.setZoom(.5, .5);
         initializeViews();
     }
     
     public void initializeViews()
     {
-        View v = new View(0, 0, getWidth(), getHeight()/2, this);
-        views.add(v);
+        View v = new View(0, 0, getWidth(), getHeight()/2, .1, .1, this);
+        views.add(0, v);
         v = new View(0, getHeight()/2, getWidth(), getHeight()/2, this);
-        views.add(v);
+        views.add(0, v);
     }
     
     public void update()
@@ -85,12 +85,13 @@ public class GamePanel extends JPanel{
         
         views.get(1).setY(getHeight()/2);
         
-        for(View v : views){
+        for(int i = views.size()-1 ; i >= 0 ; i--){
+            View v = views.get(i);
             v.setW(getWidth());
             v.setH(getHeight()/2);
             v.draw(g, this);
-            v.setXScale(2f);
-            v.setYScale(2f);
+            //v.setXScale(1f);
+            //v.setYScale(1f);
         }
         
         //new View(0, 0, getWidth(), getHeight()/2, this).draw(g, this);

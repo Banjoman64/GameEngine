@@ -36,6 +36,7 @@ public class Mask implements Iterable{
         x = y = angle = 0;
         setOffset(offsetx, offsety);
         bounds = new float[4];
+        //setAngle(0);
         getBounds();
     }
     
@@ -83,9 +84,10 @@ public class Mask implements Iterable{
         for(Shape s : mask)
             s.setX(x - offsetx + positions.get(c++).getX());
         
-        setAngle(angle);
         bounds[0]+=dx;
         bounds[2]+=dx;
+        
+        setAngle(angle);
     }
     
     public float getX(){
@@ -100,10 +102,10 @@ public class Mask implements Iterable{
         for(Shape s : mask)
             s.setY(y - offsety + positions.get(c++).getY());
         
-        setAngle(angle);
-        getBounds();
         bounds[1]+=dy;
         bounds[3]+=dy;
+        
+        setAngle(angle);
     }
     
     public float getY(){
@@ -116,8 +118,6 @@ public class Mask implements Iterable{
     }
     
     public void setAngle(float angle){
-        angle = -angle;
-        
         float da = angle - this.angle;
         this.angle = angle;
 
@@ -146,7 +146,7 @@ public class Mask implements Iterable{
     
     public void setOffsetY(float offsety){
         this.offsety = offsety;
-        getBounds();
+       getBounds();
     }
     
     public float getOffsety(){
@@ -173,7 +173,7 @@ public class Mask implements Iterable{
         g.drawLine((int)( x - offsetx), (int)( y - offsety-10 ), (int)( x - offsetx), (int)( y - offsety+10 ));
         g.drawLine((int)( x - offsetx-10 ), (int)( y - offsety), (int)( x - offsetx+10 ), (int)( y - offsety));
         
-        g.setColor(Color.WHITE);
+        g.setColor(Color.green);
         if(bounds!=null)
             g.drawRect((int)bounds[2], (int)bounds[1], (int)(bounds[0] - bounds[2]), (int)(bounds[3] - bounds[1]));
     }

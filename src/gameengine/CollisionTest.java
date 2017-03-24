@@ -41,11 +41,14 @@ public class CollisionTest extends GameObject implements GameObjectInterface{
         r1 = new Rectangle(13, w, h, 50, 50);
         r2 = new Rectangle((float) (Math.PI/3), w, h, 500, 500);
         c1 = new Circle(50, 750, 250);
+        
         m1 = new Mask(null, -16, -16);
         m1.add(new Rectangle(0, 32, 32));
         
         m2 = new Mask();
-        m2.add(new Circle(30, 30, 30));
+        m2.add(new Rectangle((float) 0,32,32));
+        m2.add(new Circle(15,37,45));
+        m2.setAngle(45);
     }
     
     @Override

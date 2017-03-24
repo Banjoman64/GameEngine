@@ -35,6 +35,17 @@ public class View {
         this.panel = panel;
     }
     
+    public View(int x, int y, int w, int h, double xScale, double yScale, JPanel panel)
+    {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.xScale = xScale;
+        this.yScale = yScale;
+        this.panel = panel;
+    }
+    
     private void drawPanel()
     {
         image = null;
@@ -52,6 +63,7 @@ public class View {
         
         GameObject.setOffset(new Point(roomX, roomY));
         GameObject.setZoom(xScale, yScale);
+        GameObject.mouse.setZoomInstance(xScale, yScale);
         drawGameObjects(graphics);
         
         this.image  = image;

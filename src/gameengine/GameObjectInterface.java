@@ -5,6 +5,7 @@
  */
 package gameengine;
 
+import gameengine.Collision.Mask;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

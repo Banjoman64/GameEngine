@@ -5,6 +5,8 @@
  */
 package gameengine;
 
+import static gameengine.Collision.Collisions.collision;
+import gameengine.Collision.Mask;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -36,6 +38,7 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     static Double yZoom = 1.0;
     protected double x, y;
     protected int depth;
+    protected Mask mask = null;
 
     protected double width, height;
     protected List<String> tags = new ArrayList<String>();
@@ -95,9 +98,14 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     //Setters
     public void setX(double x){
         this.x = x;
+        if(mask!=null)
+            mask.setX((float)x);
     }
+    
     public void setY(double y){
         this.y = y;
+        if(mask!=null)
+            mask.setY((float)y);
     }
     public void setWidth(double width){
         this.width = width;
@@ -108,7 +116,6 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     
     public void drawSprite(Graphics g, BufferedImage sprite, int x, int y, int offsetx, int offsety, float angle)
     {
-        angle = -angle;
         Image img = (Image) sprite;
         double sin = Math.abs(Math.sin(angle)),
                cos = Math.abs(Math.cos(angle));
@@ -179,9 +186,13 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
 
     public static GameObject collisionPoint(GameObject o, int x , int y){
         //TO-DO add support for collision point to Mask.java
-        if(x < o.getX()+o.getWidth()  &&  x> o.getX()  &&  y < o.getY()+o.getHeight()  &&  y> o.getY())
+        if(collision(x, y, o.mask)){
             return o;
+        }
         return null;
+        /*if(x < o.getX()+o.getWidth()  &&  x> o.getX()  &&  y < o.getY()+o.getHeight()  &&  y> o.getY())
+            return o;
+        return null;*/
     }
     
     
@@ -216,12 +227,12 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
         }
         return objList;
     }
-    //CollisionSquare
-    public GameObject collisionSquare(String s){
+    //CollisionMask
+    public GameObject collisionMask(String s){
         GameObject result;
         for(GameObject o : objectList){
             if(o.tags.contains(s)){
-                result = collisionSquare(o);
+                result = collisionMask(o);
                 if(result != null){
                     return result;
                 }
@@ -232,11 +243,11 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
     
     
 
-    public GameObject collisionSquare(Class c){
+    public GameObject collisionMask(Class c){
         GameObject result;
         for(GameObject o : objectList){
             if(c.isInstance(o)){
-                result = collisionSquare(o);
+                result = collisionMask(o);
                 if(result != null){
                     return result;
                 }
@@ -245,10 +256,10 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
         return null;
     }
 
-    public GameObject collisionSquare(GameObject o){
+    public GameObject collisionMask(GameObject o){
         //if we're not the same instance
         if(!(o.equals(this))){
-            if(x < o.getX()+o.getWidth()  &&  x + width > o.getX()  &&  y < o.getY()+o.getHeight()  &&  y + height > o.getY()){
+            if(collision(this.mask, o.mask)){
                 return o;
             }else{
                 return null;
@@ -257,13 +268,13 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
         return null;
     }
     
-    //CollisionSquareList****************************************************************
-    public List<GameObject> collisionSquareList(String s){
+    //CollisionMaskList****************************************************************
+    public List<GameObject> collisionMaskList(String s){
         List<GameObject> objList = new ArrayList<GameObject>();
         GameObject result;
         for(GameObject o : objectList){
             if(o.tags.contains(s)){
-                result = collisionSquare(o);
+                result = collisionMask(o);
                 if(result != null){
                     objList.add(result);
                 }
@@ -272,12 +283,12 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
         return objList;
     }
 
-    public List<GameObject> collisionSquareList(Class c){
+    public List<GameObject> collisionMaskList(Class c){
         List<GameObject> objList = new ArrayList<GameObject>();
         GameObject result;
         for(GameObject o : objectList){
             if(c.isInstance(o)){
-                result = collisionSquare(o);
+                result = collisionMask(o);
                 if(result != null){
                     objList.add(result);
                 }
@@ -286,47 +297,47 @@ abstract class GameObject implements Comparable<GameObject>, GameObjectInterface
         return objList;
     }
     
-    //placeCollisionSquare**************************************************************
-    public GameObject placeCollisionSquare(Class c, double x, double y){
+    //placeCollisionMask**************************************************************
+    public GameObject placeCollisionMask(Class c, double x, double y){
         double lastX = this.x;
         double lastY = this.y;
-        this.x = x;
-        this.y = y;
-        GameObject ret = collisionSquare(c);
-        this.x = lastX;
-        this.y = lastY;
+        setX(x);
+        setY(y);
+        GameObject ret = collisionMask(c);
+        setX(lastX);
+        setY(lastY);
         return ret;
     }
 
-    public GameObject placeCollisionSquare(String s, double x, double y){
+    public GameObject placeCollisionMask(String s, double x, double y){
         double lastX = this.x;
         double lastY = this.y;
-        this.x = x;
-        this.y = y;
-        GameObject ret = collisionSquare(s);
-        this.x = lastX;
-        this.y = lastY;
+        setX(x);
+        setY(y);
+        GameObject ret = collisionMask(s);
+        setX(lastX);
+        setY(lastY);
         return ret;
     }
     
-    //placeCollisionSquareList***************************************************
-     public List<GameObject> placeCollisionSquareList(String s){
+    //placeCollisionMaskList***************************************************
+     public List<GameObject> placeCollisionMaskList(String s){
         double lastX = this.x;
         double lastY = this.y;
         this.x = x;
         this.y = y;
-        List<GameObject> objList = collisionSquareList(s);
+        List<GameObject> objList = collisionMaskList(s);
         this.x = lastX;
         this.y = lastY;
         return objList;
     }
 
-    public List<GameObject> placeCollisionSquareList(Class c){
+    public List<GameObject> placeCollisionMaskList(Class c){
         double lastX = this.x;
         double lastY = this.y;
         this.x = x;
         this.y = y;
-        List<GameObject> objList = collisionSquareList(c);
+        List<GameObject> objList = collisionMaskList(c);
         this.x = lastX;
         this.y = lastY;
         return objList;

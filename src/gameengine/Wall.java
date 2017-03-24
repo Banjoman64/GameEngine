@@ -5,6 +5,9 @@
  */
 package gameengine;
 
+import gameengine.Collision.Circle;
+import gameengine.Collision.Mask;
+import gameengine.Collision.Rectangle;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -32,13 +35,27 @@ public class Wall extends GameObject implements GameObjectInterface{
         height = 32;
         tags.add("solid");
         sprite = icon;
+        mask = new Mask();
+        mask.add(new Rectangle(0f, 32, 32));
+        mask.add(new Circle(16));
+        mask.setX(x);
+        mask.setY(y);
+        //mask.getBounds();
     }
     
     @Override
     public void draw(Graphics g) {
+        //setX(x+.01);
+        if(collisionMask("solid")!= null){
+            g.setColor(Color.red);
+            drawText(g, "shiite", (int)x-100, (int)y-100);
+        }else{
+            g.setColor(Color.WHITE);
+        }
+        
         drawSprite(g, sprite, (int)(x), (int)(y), 0, 0, 0);
-        g.setColor(Color.WHITE);
         drawText(g, Integer.toString(this.id), (int)(x), (int)(y));
+        //mask.draw(g);
     }
 
 
