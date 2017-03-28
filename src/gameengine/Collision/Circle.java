@@ -3,6 +3,8 @@ package gameengine.Collision;
 import java.awt.Color;
 import java.awt.Graphics;
 
+//Circle describes a circular bounding box. Circle implements Shape.
+//The circle is described by a radius, and coordinates.
 public class Circle implements Shape{
     public float x,y;
     public int radius;
@@ -17,10 +19,12 @@ public class Circle implements Shape{
         this.y = y;
     }
     
+    //Draw the circle to the screen
     public void draw(Graphics g){
+        //Draw the circle
         g.fillOval((int)(x - radius), (int)(y - radius), (int)(radius*2), (int)(radius*2));
         
-        
+        //draw the bounding box of the circle
         g.setColor(Color.BLACK);
         float[] b = new float[4];
         b = getBounds();
@@ -58,6 +62,14 @@ public class Circle implements Shape{
         return 0;
     }
     
+    //Get the bounds of the circle. The bounds are the leftmost, rightmost,
+    //upper, and lower coordinates. These values are used for approximating
+    //collisions before doing more detailed collisions.
+    //returns a float array
+    //bounds[0] = right bound
+    //bounds[1] = upper bound
+    //bounds[2] = left bound
+    //bounds[3] = lower bound
     public float[] getBounds(){
         float[] bounds = new float[4];
         bounds[0] = x + radius;
